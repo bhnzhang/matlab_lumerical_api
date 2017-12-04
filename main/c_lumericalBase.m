@@ -22,6 +22,7 @@ classdef (Abstract) c_lumericalBase
         fid;                % file id of open lsf file
         app_handle;         % handle to opened application
         lum_objects;        % cell array of lumerical objects
+        text_buffer;        % string that saves the written lsf text commands
         
     end     % end properties
     
@@ -60,6 +61,9 @@ classdef (Abstract) c_lumericalBase
             % open a fresh lsf file
             obj = obj.open_lsf_file( 'wt+' );
             obj = obj.close_lsf_file();
+            
+            % init empty text buffer
+            text_buffer = '';
             
         end     % end contructor()
         
@@ -112,6 +116,9 @@ classdef (Abstract) c_lumericalBase
             % close file
             obj = obj.close_lsf_file();
             
+            % write text to the buffer
+            obj.text_buffer = sprintf( '%s%s\n', obj.text_buffer, text );
+            
         end     % end write_to_lsf_file()
         
         
@@ -160,7 +167,9 @@ classdef (Abstract) c_lumericalBase
         end
         
         function obj = setprop(obj, prop_name, prop_val)
-            % 
+            % adds a set property command in lumerical
+            
+            obj = obj.write_to_lsf_file(
         end
         
     end     % end methods
