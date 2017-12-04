@@ -147,6 +147,15 @@ classdef (Abstract) c_lumericalBase
             %   varargin
             %       Name-value pairs of form 'property name', property value
             %       See the primitives/c_rect.m class for valid properties
+            %
+            % Example:
+            %   obj = obj.addrect( 'name', 'timmy', 'x', 1e-6 );
+            %       Draws a rectangle in lumerical, set it's name to 'timmy' and
+            %       it's x position to 1e-6
+            %       The equivalent lumerical commands are:
+            %           addrect;
+            %           set('name','timmy');
+            %           set('x', 1e-6);  
             
             % add lumerical object
             new_rect               = c_rect( varargin{:} );
@@ -159,8 +168,8 @@ classdef (Abstract) c_lumericalBase
             props_to_set = fieldnames( new_rect.props );
             for ii = 1:length(props_to_set)
                 % set properties
-%                 obj = obj.write_to_lsf_file( sprintf( 'set(''%s'', 
-                
+                prop_val    = new_rect.props.(props_to_set{ii});
+                obj         = obj.setprop( props_to_set{ii}, prop_val);
             end
             
             
@@ -191,6 +200,18 @@ classdef (Abstract) c_lumericalBase
             end
 
         end
+        
+        function obj = addcomment(obj, comment)
+            % adds a comment to the lumerical script
+            %
+            % inputs:
+            %   comment
+            %       type: string
+            %       desc: comment to add
+            
+            
+        end     % end addcomment()
+            
         
     end     % end methods
     

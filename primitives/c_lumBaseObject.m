@@ -37,7 +37,7 @@ classdef (Abstract) c_lumBaseObject
             
             % set inputs
             for ii = 1:2:length(varargin)
-                if ~any( strcmp( obj.valid_props, varargin{ii} ) )
+                if any( strcmp( obj.valid_props, varargin{ii} ) )
                     % property is valid, set the value
                     obj.props.(varargin{ii}) = varargin{ii+1};
                 else
