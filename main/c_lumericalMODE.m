@@ -35,6 +35,13 @@ classdef c_lumericalMODE < c_lumericalBase
             % opens MODE app
             obj.app_handle = appopen('mode');
         end
+        
+        
+        function obj = addFDE(obj, varargin)
+            % adds a FDE (finite difference eigenmode) solver to the
+            % lumerical model
+            
+        end     % end addFDE()
 
         
     end     % end methods

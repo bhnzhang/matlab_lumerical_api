@@ -1,6 +1,0 @@
-addrect;
-set('x', 1e-06);
-set('name', 'REKTangle');
-addrect;
-set('name', 'timmy');
-set('x', 1e-06);
