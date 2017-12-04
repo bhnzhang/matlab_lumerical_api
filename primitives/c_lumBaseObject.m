@@ -19,7 +19,7 @@ classdef (Abstract) c_lumBaseObject
     properties (Abstract)
         
         
-        object_type;    % verbose name for object, such as rect, FDTD, etc.
+        model_type;    % verbose name for object, such as rect, FDTD, etc.
         
     end
     

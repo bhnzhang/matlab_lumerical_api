@@ -43,7 +43,7 @@ classdef c_rect < c_lumBaseObject
     
     properties
         
-        object_type;
+        model_type;
 
     end     % end properties
     
@@ -98,16 +98,7 @@ classdef c_rect < c_lumBaseObject
             
             obj = obj@c_lumBaseObject( valid_props, varargin{:} );
                         
-%             % set inputs
-%             for ii = 1:2:length(varargin)
-%                 if ~any( strcmp( valid_props, varargin{ii} ) )
-%                     % property is valid, set the value
-%                     obj.props.(varargin{ii}) = varargin{ii+1};
-%                 else
-%                     % spit a warning
-%                     warning('Property %s is not a valid property of the rectangle object', varargin{ii});
-%                 end
-%             end
+            obj.model_type = 'Rectangle';
             
         end     % end constructor()
         

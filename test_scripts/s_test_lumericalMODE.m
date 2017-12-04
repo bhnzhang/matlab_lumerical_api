@@ -16,7 +16,7 @@ obj = c_lumericalMODE(  'notes', notes, ...
                         'file_directory', file_dir );
                     
 % open lumerical
-% obj = obj.appopen();
+obj = obj.appopen();
 % pause(2);
                     
 % test file open/close/write
@@ -38,7 +38,7 @@ obj = obj.setprop(prop_name, prop_val);
 obj = obj.addrect( 'name', 'timmy', 'x', 1e-6 );
 
 % execute script
-% obj = obj.execute_script();
+obj = obj.execute_script();
 
 % close lumerical
 % obj = obj.appclose();

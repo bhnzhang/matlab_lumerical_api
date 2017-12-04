@@ -26,12 +26,6 @@ classdef (Abstract) c_lumericalBase
         
     end     % end properties
     
-%     properties (Abstract)
-%         % Abstract properties MUST be set by the child classes
-%        
-%         app_handle;     % handle to opened application
-%         
-%     end
     
     methods
         
@@ -63,7 +57,7 @@ classdef (Abstract) c_lumericalBase
             obj = obj.close_lsf_file();
             
             % init empty text buffer
-            text_buffer = '';
+            obj.text_buffer = '';
             
         end     % end contructor()
         
@@ -137,7 +131,7 @@ classdef (Abstract) c_lumericalBase
         function obj = appclose(obj)
             % closes MODE app
             appclose( obj.app_handle );
-        end
+        end     % end appclose()
         
         
         function obj = addrect(obj, varargin)
@@ -173,7 +167,7 @@ classdef (Abstract) c_lumericalBase
             end
             
             
-        end
+        end     % end addrect()
         
         function obj = setprop(obj, prop_name, prop_val)
             % adds a set property command in lumerical
