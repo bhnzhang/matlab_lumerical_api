@@ -177,11 +177,11 @@ classdef (Abstract) c_lumericalBase
             %       type: string or value
             %       desc: value of the property to set
             %
-            % examples:
-            %   Execute the lumerical command: "set('name,'timmy');"
-            %       obj = obj.setprop('name', 'timmy');
-            %   Execute the lumerical command: "set('x',1e-6);"
-            %       obj = obj.setprop('x', 1e-6');
+            % example:
+            %   obj = 
+            %
+            
+            
             
             if ischar(prop_val)
                 % property value is a string
