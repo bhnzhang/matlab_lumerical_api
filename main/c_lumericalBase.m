@@ -169,7 +169,7 @@ classdef (Abstract) c_lumericalBase
         function obj = setprop(obj, prop_name, prop_val)
             % adds a set property command in lumerical
             
-            obj = obj.write_to_lsf_file(
+%             obj = obj.write_to_lsf_file(
         end
         
     end     % end methods
