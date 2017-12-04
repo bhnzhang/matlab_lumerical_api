@@ -1,0 +1,10 @@
+# Basic lumerical script file template
+
+# printing data to the screen
+?"Hello world";
+
+# turning variables into text
+val1 = 4;
+val2 = 13;
+# print as text
+?"The value is:" + num2str(val1) + " The second value is:" + num2str(val2);
