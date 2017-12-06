@@ -40,6 +40,20 @@ classdef c_lumericalMODE < c_lumericalBase
         function obj = addFDE(obj, varargin)
             % adds a FDE (finite difference eigenmode) solver to the
             % lumerical model
+            %
+            % Inputs:
+            %   varargin
+            %       Name-value pairs of form 'property name', property value
+            %       See the primitives/c_rect.m class for valid properties
+            %
+            % Example:
+            %   obj = obj.addFDE( 'name', 'timmy', 'x', 1e-6 );
+            %       Draws a rectangle in lumerical, set it's name to 'timmy' and
+            %       it's x position to 1e-6
+            %       The equivalent lumerical commands are:
+            %           addrect;
+            %           set('name','timmy');
+            %           set('x', 1e-6);  
             
         end     % end addFDE()
 

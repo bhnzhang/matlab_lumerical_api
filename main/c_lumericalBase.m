@@ -158,16 +158,18 @@ classdef (Abstract) c_lumericalBase
             % add rectangle
             obj = obj.write_to_lsf_file( 'addrect;' );
             
-            % set properties if any
-            props_to_set = fieldnames( new_rect.props );
-            for ii = 1:length(props_to_set)
-                % set properties
-                prop_val    = new_rect.props.(props_to_set{ii});
-                obj         = obj.setprop( props_to_set{ii}, prop_val);
-            end
+            obj = obj.set_lum_object_properties( new_rect );
+%             % set properties if any
+%             props_to_set = fieldnames( new_rect.props );
+%             for ii = 1:length(props_to_set)
+%                 % set properties
+%                 prop_val    = new_rect.props.(props_to_set{ii});
+%                 obj         = obj.setprop( props_to_set{ii}, prop_val);
+%             end
             
             
         end     % end addrect()
+        
         
         function obj = setprop(obj, prop_name, prop_val)
             % adds a set property command in lumerical
@@ -195,6 +197,35 @@ classdef (Abstract) c_lumericalBase
 
         end
         
+        
+        function obj = set_lum_object_properties(obj, lum_object)
+            % sets all user-defined properties of a lumerical model object
+            %
+            % Inputs:
+            %   lum_object
+            %       type: c_lumBaseObject (or subclass)
+            %       desc: lumerical object with properties to set
+            %
+            % Example:
+            %   new_rect = c_rect( 'name', 'timmy' );
+            %   obj      = set_lum_object_properties( new_rect );
+            %       This is equivalent to adding the following line of
+            %       lumerical script:
+            %           set('name', 'timmy');
+            %       CAVEAT: it does NOT add a rectangle and it DOES assume
+            %       that the intended lumerical model object is already selected
+            
+            % set properties if any
+            props_to_set = fieldnames( lum_object.props );
+            for ii = 1:length(props_to_set)
+                % set properties
+                prop_val    = lum_object.props.(props_to_set{ii});
+                obj         = obj.setprop( props_to_set{ii}, prop_val);
+            end
+            
+        end
+        
+        
         function obj = addcomment(obj, comment)
             % adds a comment to the lumerical script
             %
@@ -203,6 +234,7 @@ classdef (Abstract) c_lumericalBase
             %       type: string
             %       desc: comment to add
             
+            obj = obj.write_to_lsf_file( sprintf('# %s', comment) );
             
         end     % end addcomment()
             
@@ -282,7 +314,7 @@ for ii = 1:2:( length(inputs)-1 )
             end
         else
             % this input has a default, set the default
-            fprintf( 'Input ''%s'' was not set, setting to default value ''%s''\n', inputs{ii}, inputs{ii+1} );
+            fprintf( 'Input ''%s'' was not set, setting to default value ''%s''\n', inputs{ii}, num2str(inputs{ii+1}) );
             p.(inputs{ii}) = inputs{ii+1};
         end
 
