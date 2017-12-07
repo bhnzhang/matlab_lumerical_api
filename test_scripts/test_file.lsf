@@ -4,3 +4,6 @@ set('name', 'REKTangle');
 addrect;
 set('name', 'timmy');
 set('x', 1e-06);
+addfde;
+set('x min', -2e-06);
+set('solver type', '2D X normal');

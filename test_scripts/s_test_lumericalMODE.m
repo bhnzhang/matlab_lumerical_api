@@ -37,8 +37,11 @@ obj = obj.setprop(prop_name, prop_val);
 % test add rectangle
 obj = obj.addrect( 'name', 'timmy', 'x', 1e-6 );
 
+% add FDE
+obj = obj.addFDE( 'x min', -2e-6, 'solver type', '2D X normal' );
+
 % execute script
 obj = obj.execute_script();
 
 % close lumerical
-% obj = obj.appclose();
+obj = obj.appclose();

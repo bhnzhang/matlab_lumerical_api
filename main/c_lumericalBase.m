@@ -158,14 +158,8 @@ classdef (Abstract) c_lumericalBase
             % add rectangle
             obj = obj.write_to_lsf_file( 'addrect;' );
             
+            % set rectangle properties
             obj = obj.set_lum_object_properties( new_rect );
-%             % set properties if any
-%             props_to_set = fieldnames( new_rect.props );
-%             for ii = 1:length(props_to_set)
-%                 % set properties
-%                 prop_val    = new_rect.props.(props_to_set{ii});
-%                 obj         = obj.setprop( props_to_set{ii}, prop_val);
-%             end
             
             
         end     % end addrect()
@@ -220,7 +214,7 @@ classdef (Abstract) c_lumericalBase
             for ii = 1:length(props_to_set)
                 % set properties
                 prop_val    = lum_object.props.(props_to_set{ii});
-                obj         = obj.setprop( props_to_set{ii}, prop_val);
+                obj         = obj.setprop( strrep( props_to_set{ii}, '_', ' ' ), prop_val);
             end
             
         end

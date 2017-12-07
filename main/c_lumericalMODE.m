@@ -55,6 +55,16 @@ classdef c_lumericalMODE < c_lumericalBase
             %           set('name','timmy');
             %           set('x', 1e-6);  
             
+            % add lumerical object
+            new_FDE                 = c_FDE( varargin{:} );
+            obj.lum_objects{end+1}  = new_FDE;
+            
+            % add rectangle
+            obj = obj.write_to_lsf_file( 'addfde;' );
+            
+            % set rectangle properties
+            obj = obj.set_lum_object_properties( new_FDE );
+            
         end     % end addFDE()
 
         

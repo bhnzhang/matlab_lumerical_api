@@ -11,6 +11,9 @@ classdef (Abstract) c_lumBaseObject
     properties
         
         props;          % struct that will store all properties
+                        % properties that have names with spaces ' ' in the
+                        % name will be renamed with underscores '_' in
+                        % placement of ' '
         valid_props;    % cell array that stores valid property names
                         % for example { 'x min', 'x max', 'rotation' };
 
@@ -39,7 +42,8 @@ classdef (Abstract) c_lumBaseObject
             for ii = 1:2:length(varargin)
                 if any( strcmp( obj.valid_props, varargin{ii} ) )
                     % property is valid, set the value
-                    obj.props.(varargin{ii}) = varargin{ii+1};
+                    prop_name = strrep( varargin{ii}, ' ', '_' );
+                    obj.props.(prop_name) = varargin{ii+1};
                 else
                     % spit a warning
                     warning('Property %s is not a valid property of the rectangle object', varargin{ii});

@@ -59,6 +59,7 @@ classdef c_FDE < c_lumBaseObject
 % search
 % simulation temperature
 % solver type
+%       OK what the heck are the allowed solver types?
 % type
 % use max index
 % use mesh refinement
