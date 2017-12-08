@@ -66,6 +66,15 @@ classdef c_lumericalMODE < c_lumericalBase
             obj = obj.set_lum_object_properties( new_FDE );
             
         end     % end addFDE()
+        
+        
+        function obj = findmodes(obj)
+            % finds modes
+            % uhh how do i set the inputs to this?
+            
+            obj = obj.write_to_lsf_file( 'findmodes;' );
+            
+        end
 
         
     end     % end methods
