@@ -15,4 +15,4 @@ set('x max bc', 'PML');
 set('y min bc', 'PML');
 set('y max bc', 'PML');
 findmodes;
-Efield = getresult('mode1', 'E');
+Ex = getresult('mode1', 'Ex');

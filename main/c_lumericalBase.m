@@ -256,6 +256,16 @@ classdef (Abstract) c_lumericalBase
             obj = obj.write_to_lsf_file( sprintf('%s = getresult(''%s'', ''%s'');', variable_name, monitor_name, dataset ) );
             
         end     % end getresult()
+        
+        
+        function [obj, var] = getvar( obj, variable_name )
+            % Gets the data for variable "variable_name" from Lumerical and
+            % returns it to matlab
+            % Essentially implements appgetvar
+            %   see: https://kb.lumerical.com/en/ref_scripts_appgetvar.html
+            %
+            var = appgetvar( obj.app_handle, variable_name );
+        end
             
         
     end     % end methods

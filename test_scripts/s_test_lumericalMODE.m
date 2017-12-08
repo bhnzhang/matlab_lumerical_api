@@ -54,10 +54,13 @@ obj = obj.addFDE(   'x min', -3e-6, 'x max', 3e-6, ...
 obj = obj.findmodes();
 
 % return mode 1 E field
-obj = obj.getresult( 'mode1', 'E', 'Efield' );
+obj = obj.getresult( 'mode1', 'Ex', 'Ex' );
                 
 % execute script
 obj = obj.execute_script();
+
+% test getting var
+x = appgetvar( obj.app_handle, 'Ex' );
 
 % close lumerical
 obj = obj.appclose();
