@@ -231,6 +231,30 @@ classdef (Abstract) c_lumericalBase
             obj = obj.write_to_lsf_file( sprintf('# %s', comment) );
             
         end     % end addcomment()
+        
+        
+        function obj = getresult( obj, monitor_name, dataset, variable_name )
+            % Saves the result with name "dataset" of a monitor/analysis
+            % object "monitor_name" into lumerical variable "variablename"
+            %
+            % Inputs:
+            %   monitor_name
+            %       type: string
+            %       desc: name of monitor to return data from
+            %   dataset
+            %       type: string
+            %       desc: name of data to return
+            %   variable_name
+            %       type: string
+            %       desc: name of lumerical variable to save to
+            %
+            % Example:
+            %
+            
+            obj = obj.write_to_lsf_file( sprint('%s = getresult(''%s'', ''%s'');', variable_name, monitor_name, dataset ) );
+            
+            
+        end
             
         
     end     % end methods
