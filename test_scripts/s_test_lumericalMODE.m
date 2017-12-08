@@ -52,6 +52,9 @@ obj = obj.addFDE(   'x min', -3e-6, 'x max', 3e-6, ...
 
 % find modes
 obj = obj.findmodes();
+
+% return mode 1 E field
+obj = obj.getresult( 'mode1', 'E', 'Efield' );
                 
 % execute script
 obj = obj.execute_script();

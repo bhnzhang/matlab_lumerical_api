@@ -249,12 +249,13 @@ classdef (Abstract) c_lumericalBase
             %       desc: name of lumerical variable to save to
             %
             % Example:
-            %
+            %   obj = obj.getresult( 'monitor', 'E', 'Efield' );
+            %       The above is equivalent to scripting this in lumerical:
+            %       Efield = getresult('monitor', 'E');
             
-            obj = obj.write_to_lsf_file( sprint('%s = getresult(''%s'', ''%s'');', variable_name, monitor_name, dataset ) );
+            obj = obj.write_to_lsf_file( sprintf('%s = getresult(''%s'', ''%s'');', variable_name, monitor_name, dataset ) );
             
-            
-        end
+        end     % end getresult()
             
         
     end     % end methods
