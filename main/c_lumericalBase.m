@@ -23,6 +23,9 @@ classdef (Abstract) c_lumericalBase
         app_handle;         % handle to opened application
         lum_objects;        % cell array of lumerical objects
         text_buffer;        % string that saves the written lsf text commands
+        list_of_variables;  % cell array of names of user created lumerical variables
+                            % used for reference for user to grab variables
+                            % after a simulation is executed
         
     end     % end properties
     
@@ -233,7 +236,7 @@ classdef (Abstract) c_lumericalBase
         end     % end addcomment()
         
         
-        function obj = getresult( obj, monitor_name, dataset, variable_name )
+        function obj = saveresult( obj, monitor_name, dataset, variable_name )
             % Saves the result with name "dataset" of a monitor/analysis
             % object "monitor_name" into lumerical variable "variablename"
             %
@@ -253,9 +256,32 @@ classdef (Abstract) c_lumericalBase
             %       The above is equivalent to scripting this in lumerical:
             %       Efield = getresult('monitor', 'E');
             
+            % save variable in lumerical
             obj = obj.write_to_lsf_file( sprintf('%s = getresult(''%s'', ''%s'');', variable_name, monitor_name, dataset ) );
             
+            % document variable
+            obj.list_of_variables{end+1} = variable_name;
+            
         end     % end getresult()
+        
+        
+        function [obj, var] = getvar( obj, variable_name )
+            % Gets the data for variable "variable_name" from Lumerical and
+            % returns it to matlab
+            % Essentially implements appgetvar
+            %   see: https://kb.lumerical.com/en/ref_scripts_appgetvar.html
+            %
+            % Inputs:
+            %   variable_name
+            %       type: string
+            %       desc: name of variable to return
+            %
+            % Outputs:
+            %   var
+            %       type: depends
+            %       desc: the variable you asked for
+            var = appgetvar( obj.app_handle, variable_name );
+        end
             
         
     end     % end methods

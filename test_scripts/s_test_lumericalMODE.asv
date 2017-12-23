@@ -39,12 +39,11 @@ obj = obj.addrect(  'name', 'timmy',    ...
                     'x min', -0.5e-6,   ...
                     'x max', 0.5e-6,    ...
                     'y min', -0.5e-6,   ...
-                    'y max', 0.5e-6,    ...
-                    'index', 3 );
+                    'y max', 0.5e-6 );
 
 % add FDE
 obj = obj.addFDE(   'x min', -3e-6, 'x max', 3e-6,  ...
-                    'y min', -3.5e-6, 'y max', 3.5e-6,  ...
+                    'y min', -5e-6, 'y max', e-6,  ...
                     'solver type', '2D Z normal',   ...
                     'x min bc', 'PML', ...
                     'x max bc', 'PML', ...
@@ -58,7 +57,7 @@ obj = obj.findmodes();
 obj = obj.saveresult( 'mode1', 'Ex', 'mode1_Ex' );
 obj = obj.saveresult( 'mode2', 'Ex', 'mode2_Ex' );
 obj = obj.saveresult( 'mode1', 'x', 'x' );
-obj = obj.saveresult( 'mode1', 'y', 'y' );
+obj = obj.saveresult(' mode1', 'y', 'y' );
 
 % execute script
 obj = obj.execute_script();
@@ -71,11 +70,7 @@ obj = obj.execute_script();
 
 % plot modes
 figure;
-imagesc( x, y, real(mode1_Ex) );
-xlabel('x'); ylabel('y'); 
-colorbar;
-set( gca, 'ydir', 'normal' );
-title('mode 1');
+imagesc( x, y, mode1_Ex );
 
 % close lumerical
 obj = obj.appclose();
