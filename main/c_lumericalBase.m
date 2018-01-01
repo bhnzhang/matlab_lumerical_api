@@ -216,7 +216,7 @@ classdef (Abstract) c_lumericalBase
             %       obj = obj.getprop('x');
             
             % property value is a string
-            obj = obj.write_to_lsf_file( sprintf('''%s'' = get(''%s'');', out_var_name, prop_name ) );
+            obj = obj.write_to_lsf_file( sprintf('%s = get(''%s'');', out_var_name, prop_name ) );
 
         end
         
