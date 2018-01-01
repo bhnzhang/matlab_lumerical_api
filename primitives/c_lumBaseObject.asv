@@ -46,37 +46,21 @@ classdef (Abstract) c_lumBaseObject
                     obj.props.(prop_name) = varargin{ii+1};
                 else
                     % spit a warning
-                    warning('Property %s is not a valid property of the object', varargin{ii});
+                    warning('Property %s is not a valid property of the rectangle object', varargin{ii});
                 end
             end
             
         end     % end constructor()
         
-        % realized this function should be placed in c_lumericalBase.m
-%         function [ obj, prop_val ] = get_property( obj, prop_name )
-%             % Queries lumerical for the value of the requested, selected
-%             % lumerical object
-%             %
-%             % Inputs:
-%             %   prop_name
-%             %       type: string
-%             %       desc: name of property to return from lumerical
-%             %
-%             % Outputs:
-%             %   prop_val
-%             %       type: varies
-%             
-%             if any( strcmp( obj.valid_props, prop_name ) )
-%                     % property is valid, return the value
-%                     prop_val = 
-%                     prop_name = strrep( prop_name, ' ', '_' );
-%                     obj.props.(prop_name) = varargin{ii+1};
-%             else
-%                     % spit a warning
-%                     error('Property %s is not a valid property of the object', varargin{ii});
-%             end
-%             
-%         end
+        function [ obj, prop_val ] = get_property( obj, prop_name )
+            % Queries lumerical for the value of the requested, selected
+            % lumerical object
+            %
+            % Inputs:
+            %   prop_name
+            %       typ
+            
+        end
         
 
     end     % end methods
