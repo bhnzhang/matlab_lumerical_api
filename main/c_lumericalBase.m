@@ -22,7 +22,8 @@ classdef (Abstract) c_lumericalBase
         fid;                % file id of open lsf file
         app_handle;         % handle to opened application
         lum_objects;        % cell array of lumerical objects
-        text_buffer;        % string that saves the written lsf text commands
+        all_text;           % string that saves every command in lsf file
+        text_buffer;        % string that saves the un-executed lsf text commands
         list_of_variables;  % cell array of names of user created lumerical variables
                             % used for reference for user to grab variables
                             % after a simulation is executed
@@ -35,8 +36,12 @@ classdef (Abstract) c_lumericalBase
         function obj = c_lumericalBase( varargin )
             % Constructor
             
+            % Dependency imports
             % add path to primitive objects
-            addpath([ '..' filesep 'primitives' ]);
+            fname           = mfilename;                        % name of class
+            fpath           = mfilename('fullpath');            % full path, including fname
+            projectpath     = erase( fpath, [ 'main' filesep fname] );           % now only holds path to project's code
+            addpath([ projectpath 'primitives' ]);
             
             % inputs and defaults
             inputs = {  'notes',            'none' ...
@@ -60,6 +65,7 @@ classdef (Abstract) c_lumericalBase
             obj = obj.close_lsf_file();
             
             % init empty text buffer
+            obj.all_text    = '';
             obj.text_buffer = '';
             
         end     % end contructor()
@@ -95,6 +101,14 @@ classdef (Abstract) c_lumericalBase
         end     % end close_lsf_file()
         
         
+        function obj = write_command( obj, text )
+            % writes a new lumerical command to the text buffer
+            
+            % write text to the buffer
+            obj.text_buffer = sprintf( '%s%s\n', obj.text_buffer, text );
+        end
+        
+        
         function obj = write_to_lsf_file( obj, text )
             % writes (in append mode) a line of text to lsf file
             % open lsf file-> write text ->close lsf file
@@ -113,10 +127,8 @@ classdef (Abstract) c_lumericalBase
             % close file
             obj = obj.close_lsf_file();
             
-            % write text to the buffer
-            obj.text_buffer = sprintf( '%s%s\n', obj.text_buffer, text );
-            
         end     % end write_to_lsf_file()
+        
         
         
         function obj = execute_script( obj )
@@ -127,6 +139,30 @@ classdef (Abstract) c_lumericalBase
             
             % run script
             appevalscript( obj.app_handle, script_contents );
+            
+        end     % end execute_script()
+        
+        
+        function obj = execute_commands( obj )
+            % executes the commands that are currently in the text buffer
+            % 
+            % full function:
+            %   write the commands to the lsf file
+            %   write the commands to the all text buffer
+            %   run the commands
+            %   clear the text buffer
+            
+            % write commands to lsf file
+            obj = obj.write_to_lsf_file( obj.text_buffer );
+            
+            % add commands to all text buffer
+            obj.all_text = sprintf( '%s%s', obj.all_text, obj.text_buffer );
+            
+            % run commands
+            appevalscript( obj.app_handle, obj.text_buffer );
+            
+            % clear text buffer
+            obj.text_buffer = '';
             
         end     % end execute_script()
         
@@ -159,7 +195,8 @@ classdef (Abstract) c_lumericalBase
             obj.lum_objects{end+1} = new_rect;
             
             % add rectangle
-            obj = obj.write_to_lsf_file( 'addrect;' );
+            obj = obj.write_command( 'addrect;' ); 
+%             obj = obj.write_to_lsf_file( 'addrect;' );
             
             % set rectangle properties
             obj = obj.set_lum_object_properties( new_rect );
@@ -187,9 +224,9 @@ classdef (Abstract) c_lumericalBase
             
             if ischar(prop_val)
                 % property value is a string
-                obj = obj.write_to_lsf_file( sprintf('set(''%s'', ''%s'');', prop_name, prop_val ) );
+                obj = obj.write_command( sprintf('set(''%s'', ''%s'');', prop_name, prop_val ) ); 
             else
-                obj = obj.write_to_lsf_file( [ 'set(''' prop_name ''', ' num2str(prop_val), ');' ] );
+                obj = obj.write_command( [ 'set(''' prop_name ''', ' num2str(prop_val), ');' ] ); 
             end
 
         end
@@ -216,7 +253,10 @@ classdef (Abstract) c_lumericalBase
             %       obj = obj.getprop('x');
             
             % property value is a string
-            obj = obj.write_to_lsf_file( sprintf('%s = get(''%s'');', out_var_name, prop_name ) );
+            obj = obj.write_command( sprintf('%s = get(''%s'');', out_var_name, prop_name ) );
+
+            % document variable
+            obj.list_of_variables{end+1} = out_var_name;
 
         end
         
@@ -257,7 +297,7 @@ classdef (Abstract) c_lumericalBase
             %       type: string
             %       desc: comment to add
             
-            obj = obj.write_to_lsf_file( sprintf('# %s', comment) );
+            obj = obj.write_command( sprintf('# %s', comment) );
             
         end     % end addcomment()
         
@@ -283,7 +323,7 @@ classdef (Abstract) c_lumericalBase
             %       Efield = getresult('monitor', 'E');
             
             % save variable in lumerical
-            obj = obj.write_to_lsf_file( sprintf('%s = getresult(''%s'', ''%s'');', variable_name, monitor_name, dataset ) );
+            obj = obj.write_command( sprintf('%s = getresult(''%s'', ''%s'');', variable_name, monitor_name, dataset ) ); 
             
             % document variable
             obj.list_of_variables{end+1} = variable_name;

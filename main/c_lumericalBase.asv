@@ -22,7 +22,8 @@ classdef (Abstract) c_lumericalBase
         fid;                % file id of open lsf file
         app_handle;         % handle to opened application
         lum_objects;        % cell array of lumerical objects
-        text_buffer;        % string that saves the written lsf text commands
+        all_text;           % string that saves every command in lsf file
+        text_buffer;        % string that saves the un-executed lsf text commands
         list_of_variables;  % cell array of names of user created lumerical variables
                             % used for reference for user to grab variables
                             % after a simulation is executed
@@ -60,6 +61,7 @@ classdef (Abstract) c_lumericalBase
             obj = obj.close_lsf_file();
             
             % init empty text buffer
+            obj.all_text    = '';
             obj.text_buffer = '';
             
         end     % end contructor()
@@ -95,6 +97,14 @@ classdef (Abstract) c_lumericalBase
         end     % end close_lsf_file()
         
         
+        function obj = write_command( obj, text )
+            % writes a new lumerical command to the text buffer
+            
+            % write text to the buffer
+            obj.text_buffer = sprintf( '%s%s\n', obj.text_buffer, text );
+        end
+        
+        
         function obj = write_to_lsf_file( obj, text )
             % writes (in append mode) a line of text to lsf file
             % open lsf file-> write text ->close lsf file
@@ -113,10 +123,11 @@ classdef (Abstract) c_lumericalBase
             % close file
             obj = obj.close_lsf_file();
             
-            % write text to the buffer
-            obj.text_buffer = sprintf( '%s%s\n', obj.text_buffer, text );
+%             % write text to the buffer
+%             obj.text_buffer = sprintf( '%s%s\n', obj.text_buffer, text );
             
         end     % end write_to_lsf_file()
+        
         
         
         function obj = execute_script( obj )
@@ -127,6 +138,27 @@ classdef (Abstract) c_lumericalBase
             
             % run script
             appevalscript( obj.app_handle, script_contents );
+            
+        end     % end execute_script()
+        
+        
+        function obj = execute_commands( obj )
+            % executes the commands that are currently in the text buffer
+            % 
+            % full function:
+            %   write the commands to the lsf file
+            %   write the commands to the all text buffer
+            %   run the commands
+            %   clear the text buffer
+            
+            % write commands to lsf file
+            obj = obj.write_to_lsf_file( obj.text_buffer );
+            
+            % add commands to all text buffer
+            obj.all_text = sprintf( '%s%s', obj.all_text, 
+            
+            % run commands
+            appevalscript( obj.app_handle, obj.text_buffer );
             
         end     % end execute_script()
         
@@ -195,14 +227,19 @@ classdef (Abstract) c_lumericalBase
         end
         
         
-        function obj = getprop(obj, prop_name)
-            % adds a get property command in lumerical, which queries the
-            % currently selected lumerical object and saves
+        function obj = getprop(obj, prop_name, out_var_name )
+            % Adds a get property command in lumerical, which queries the
+            % currently selected lumerical object and saves to lumerical
+            % variable with name <out_var_name>.
+            % 
             %
             % inputs:
             %   prop_name
             %       type: string
             %       desc: name of property to set
+            %   out_var_name
+            %       type: string
+            %       desc: name of lumerical variable to save property value to
             %
             % examples:
             %   Execute the lumerical command: "get('name');"
@@ -211,7 +248,7 @@ classdef (Abstract) c_lumericalBase
             %       obj = obj.getprop('x');
             
             % property value is a string
-            obj = obj.write_to_lsf_file( sprintf('get(''%s'');', prop_name ) );
+            obj = obj.write_to_lsf_file( sprintf('%s = get(''%s'');', out_var_name, prop_name ) );
 
         end
         

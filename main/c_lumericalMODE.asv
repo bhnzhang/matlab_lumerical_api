@@ -71,9 +71,10 @@ classdef c_lumericalMODE < c_lumericalBase
         
         function obj = findmodes(obj)
             % finds modes
-            % to set the inputs, set them with the FDE object before
-            % calling the modesolver
-            obj = obj.write_command( 'findmodes;' );
+            % to set the inputs, set them with the FDE object
+            
+            obj = obj.write_to_lsf_file( 'findmodes;' );
+            
         end
 
         
