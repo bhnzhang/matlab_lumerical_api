@@ -22,7 +22,8 @@ classdef (Abstract) c_lumBaseObject
     properties (Abstract)
         
         
-        model_type;    % verbose name for object, such as rect, FDTD, etc.
+        model_type;     % verbose name for object, such as rect, FDTD, etc. for user's own reference
+        name;           % name of object. Required for selecting the object. Needs to match what's in lumerical
         
     end
     
@@ -44,6 +45,12 @@ classdef (Abstract) c_lumBaseObject
                     % property is valid, set the value
                     prop_name = strrep( varargin{ii}, ' ', '_' );
                     obj.props.(prop_name) = varargin{ii+1};
+                    
+                    % also if the object has the "name" property, set the
+                    % name automatically
+                    if strcmp( varargin{ii}, 'name' )
+                        obj.name = varargin{ii+1};
+                    end
                 else
                     % spit a warning
                     warning('Property %s is not a valid property of the object', varargin{ii});

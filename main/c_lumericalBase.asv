@@ -36,8 +36,12 @@ classdef (Abstract) c_lumericalBase
         function obj = c_lumericalBase( varargin )
             % Constructor
             
+            % Dependency imports
             % add path to primitive objects
-            addpath([ '..' filesep 'primitives' ]);
+            fname           = mfilename;                        % name of class
+            fpath           = mfilename('fullpath');            % full path, including fname
+            projectpath     = erase( fpath, [ 'main' filesep fname] );           % now only holds path to project's code
+            addpath([ projectpath 'primitives' ]);
             
             % inputs and defaults
             inputs = {  'notes',            'none' ...
@@ -123,9 +127,6 @@ classdef (Abstract) c_lumericalBase
             % close file
             obj = obj.close_lsf_file();
             
-%             % write text to the buffer
-%             obj.text_buffer = sprintf( '%s%s\n', obj.text_buffer, text );
-            
         end     % end write_to_lsf_file()
         
         
@@ -155,10 +156,13 @@ classdef (Abstract) c_lumericalBase
             obj = obj.write_to_lsf_file( obj.text_buffer );
             
             % add commands to all text buffer
-            obj.all_text = sprintf( '%s%s', obj.all_text, 
+            obj.all_text = sprintf( '%s%s', obj.all_text, obj.text_buffer );
             
             % run commands
             appevalscript( obj.app_handle, obj.text_buffer );
+            
+            % clear text buffer
+            obj.text_buffer = '';
             
         end     % end execute_script()
         
@@ -191,7 +195,8 @@ classdef (Abstract) c_lumericalBase
             obj.lum_objects{end+1} = new_rect;
             
             % add rectangle
-            obj = obj.write_to_lsf_file( 'addrect;' );
+            obj = obj.write_command( 'addrect;' ); 
+%             obj = obj.write_to_lsf_file( 'addrect;' );
             
             % set rectangle properties
             obj = obj.set_lum_object_properties( new_rect );
@@ -219,9 +224,9 @@ classdef (Abstract) c_lumericalBase
             
             if ischar(prop_val)
                 % property value is a string
-                obj = obj.write_to_lsf_file( sprintf('set(''%s'', ''%s'');', prop_name, prop_val ) );
+                obj = obj.write_command( sprintf('set(''%s'', ''%s'');', prop_name, prop_val ) ); 
             else
-                obj = obj.write_to_lsf_file( [ 'set(''' prop_name ''', ' num2str(prop_val), ');' ] );
+                obj = obj.write_command( [ 'set(''' prop_name ''', ' num2str(prop_val), ');' ] ); 
             end
 
         end
@@ -248,7 +253,10 @@ classdef (Abstract) c_lumericalBase
             %       obj = obj.getprop('x');
             
             % property value is a string
-            obj = obj.write_to_lsf_file( sprintf('%s = get(''%s'');', out_var_name, prop_name ) );
+            obj = obj.write_command( sprintf('%s = get(''%s'');', out_var_name, prop_name ) );
+
+            % document variable
+            obj.list_of_variables{end+1} = out_var_name;
 
         end
         
@@ -289,7 +297,7 @@ classdef (Abstract) c_lumericalBase
             %       type: string
             %       desc: comment to add
             
-            obj = obj.write_to_lsf_file( sprintf('# %s', comment) );
+            obj = obj.write_command( sprintf('# %s', comment) );
             
         end     % end addcomment()
         
@@ -315,7 +323,7 @@ classdef (Abstract) c_lumericalBase
             %       Efield = getresult('monitor', 'E');
             
             % save variable in lumerical
-            obj = obj.write_to_lsf_file( sprintf('%s = getresult(''%s'', ''%s'');', variable_name, monitor_name, dataset ) );
+            obj = obj.write_command( sprintf('%s = getresult(''%s'', ''%s'');', variable_name, monitor_name, dataset ) ); 
             
             % document variable
             obj.list_of_variables{end+1} = variable_name;
@@ -339,6 +347,48 @@ classdef (Abstract) c_lumericalBase
             %       type: depends
             %       desc: the variable you asked for
             var = appgetvar( obj.app_handle, variable_name );
+        end
+        
+        
+        function [obj, lum_obj] = get_lum_obj_props( obj, lum_obj )
+            % get all the properties of the requested lumerical object
+            %
+            % Inputs:
+            %   lum_obj
+            %       type: lumerical base object
+            %       desc: the lumerical base object to return all
+            %       properties from
+            
+            % select object
+            % WARNING: this might be buggy, since I have not forced the
+            % user to include a name for the object
+            appevalscript( obj.app_handle, sprintf( 'select(''%s'');', lum_obj.name ) );
+            
+            for ii = 1:length( lum_obj.valid_props )
+                % for each property name
+                
+                % save property to an internal lumerical var "temp"
+                appevalscript( obj.app_handle, sprintf( 'temp = get(''%s'');', lum_obj.valid_props{ii} ) );
+                
+                % return that property value to matlab
+                [obj, prop_val] = obj.getvar( 'temp' );
+                
+                % assign that property value to the object
+                prop_name                   = strrep( lum_obj.valid_props{ii}, ' ', '_' );              % replace whitespace w/ underscores
+                prop_name                   = strrep( prop_name, '-', '_' );                            % replace dashes w/ underscores
+                lum_obj.props.(prop_name)   = prop_val;
+                
+            end
+            
+        end
+        
+        
+        function obj = update_all_lum_obj_props( obj, lum_obj )
+            % Loops thoru
+            %
+            % This function will probably be more useful for debugging and
+            % for iterating rather than first-go simulations
+            
         end
             
         

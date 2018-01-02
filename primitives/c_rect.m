@@ -44,6 +44,7 @@ classdef c_rect < c_lumBaseObject
     properties
         
         model_type;
+        name; 
 
     end     % end properties
     

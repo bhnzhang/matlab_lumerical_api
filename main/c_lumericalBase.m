@@ -348,6 +348,56 @@ classdef (Abstract) c_lumericalBase
             %       desc: the variable you asked for
             var = appgetvar( obj.app_handle, variable_name );
         end
+        
+        
+        function [obj, lum_obj] = get_lum_obj_props( obj, lum_obj )
+            % get all the properties of the requested lumerical object
+            %
+            % Inputs:
+            %   lum_obj
+            %       type: lumerical base object
+            %       desc: the lumerical base object to return all
+            %       properties from
+            
+            % select object
+            % WARNING: this might be buggy, since I have not forced the
+            % user to include a name for the object
+            appevalscript( obj.app_handle, sprintf( 'select(''%s'');', lum_obj.name ) );
+            
+            for ii = 1:length( lum_obj.valid_props )
+                % for each property name
+                
+                % save property to an internal lumerical var "temp"
+                appevalscript( obj.app_handle, sprintf( 'temp = get(''%s'');', lum_obj.valid_props{ii} ) );
+                
+                % return that property value to matlab
+                [obj, prop_val] = obj.getvar( 'temp' );
+                
+                % assign that property value to the object
+                prop_name                   = strrep( lum_obj.valid_props{ii}, ' ', '_' );              % replace whitespace w/ underscores
+                prop_name                   = strrep( prop_name, '-', '_' );                            % replace dashes w/ underscores
+                lum_obj.props.(prop_name)   = prop_val;
+                
+            end
+            
+        end
+        
+        
+        function obj = update_all_lum_obj_props( obj )
+            % Loops through each lumerical object and updates its
+            % properties by calling get_lum_obj_props
+            %
+            % This function will probably be more useful for debugging and
+            % for iterating rather than first-go simulations
+            
+            for ii = 1:length( obj.lum_objects )
+               
+                [obj, temp_obj]     = obj.get_lum_obj_props( obj.lum_objects{ii} );
+                obj.lum_objects{ii} = temp_obj;
+                
+            end
+            
+        end
             
         
     end     % end methods
