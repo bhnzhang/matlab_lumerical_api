@@ -398,6 +398,18 @@ classdef (Abstract) c_lumericalBase
             end
             
         end
+        
+        
+        function obj = delete_all( obj )
+            % deletes all objects in the current group scope
+            obj = obj.write_command( 'deleteall;' );
+        end
+        
+        
+        function obj = switch_to_layout( obj )
+            % switches the solver to LAYOUT mode
+            obj = obj.write_command( 'switchtolayout;' );
+        end
             
         
     end     % end methods
