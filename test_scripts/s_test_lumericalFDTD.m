@@ -5,7 +5,8 @@
 clear; close all;
 
 % dependencies
-addpath( 'C:\Users\beezy\git\matlab_lumerical_api\main' );                  % main lumerical/matlab api code, laptop
+addpath( genpath( '..' ) );
+% addpath( 'C:\Users\beezy\git\matlab_lumerical_api\main' );                  % main lumerical/matlab api code, laptop
 
 % inputs
 notes       = 'hello';
