@@ -1,6 +1,8 @@
 % author: bohan
 %
 % script for testing lumerical FDTD api
+% recreating nanowire tut from here:
+% https://kb.lumerical.com/en/particle_scattering_nanowire_modeling_instructions.html
 
 clear; close all;
 
@@ -9,8 +11,8 @@ addpath( genpath( '..' ) );
 % addpath( 'C:\Users\beezy\git\matlab_lumerical_api\main' );                  % main lumerical/matlab api code, laptop
 
 % inputs
-notes       = 'hello';
-filename    = 'test_file.lsf';
+notes       = 'testing lumerical fdtd using the nanowire tutorial';
+filename    = 'test_fdtd_nanowire_tut.lsf';
 file_dir    = pwd;
 
 obj = c_lumericalFDTD(  'notes', notes, ...
@@ -20,35 +22,33 @@ obj = c_lumericalFDTD(  'notes', notes, ...
 % open lumerical
 obj = obj.appopen();
 
-
-% test add rectangle
-obj = obj.addrect(  'name', 'timmy',    ...
-                    'x min', -0.5e-6,   ...
-                    'x max', 0.5e-6,    ...
-                    'y min', -0.5e-6,   ...
-                    'y max', 0.5e-6,    ...
-                    'index', 3 );
-
-% test request value from rectangle
-obj = obj.getprop( 'x min', 'rect_xmin' );
+               
+% add circle
+obj = obj.addcircle(    'name', 'circle1', ...
+                        'x', 0,   ...
+                        'y', 0,   ...
+                        'z', 0, ...
+                        'z span', 600e-9, ...
+                        'radius', 25e-9, ...
+                        'material', 'Ag (Silver) - Palik (0-2um)' );
 
 % execute commands
 obj = obj.execute_commands();
 
-% transfer property to matlab
-[obj, rect_xmin] = obj.getvar( 'rect_xmin' );
-
+% add fdtd region
+obj = obj.addFDTD( 	'dimension', '2D', ...
+                    'simulation time', 200e-15, ...
+                    'x', 0, ...
+                    'y', 0, ...
+                    'z', 0, ...
+                    'x span', 800e-9, ...
+                    'y span', 800e-9 );
                 
-% test add circle
-obj = obj.addcircle(  'name', 'timmy',    ...
-                    'x', 2e-6,   ...
-                    'y', 1e-6,   ...
-                    'index', 2.4 );
-
 % execute commands
 obj = obj.execute_commands();
 
-
+% update all lumerical object properties
+obj = obj.update_all_lum_obj_props();
 
 % 
 % % add FDE

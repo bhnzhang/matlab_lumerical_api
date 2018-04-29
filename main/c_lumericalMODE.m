@@ -44,26 +44,26 @@ classdef c_lumericalMODE < c_lumericalBase
             % Inputs:
             %   varargin
             %       Name-value pairs of form 'property name', property value
-            %       See the primitives/c_rect.m class for valid properties
+            %       See the primitives/c_FDE.m class for valid properties
             %
             % Example:
-            %   obj = obj.addFDE( 'name', 'timmy', 'x', 1e-6 );
-            %       Draws a rectangle in lumerical, set it's name to 'timmy' and
-            %       it's x position to 1e-6
-            %       The equivalent lumerical commands are:
-            %           addrect;
-            %           set('name','timmy');
-            %           set('x', 1e-6);  
+            % obj = obj.addFDE(   'x min', -3e-6, 'x max', 3e-6,  ...
+            %                     'y min', -3.5e-6, 'y max', 3.5e-6,  ...
+            %                     'solver type', '2D Z normal',   ...
+            %                     'x min bc', 'PML', ...
+            %                     'x max bc', 'PML', ...
+            %                     'y min bc', 'PML', ...
+            %                     'y max bc', 'PML' );
+
             
             % add lumerical object
             new_FDE                 = c_FDE( varargin{:} );
             obj.lum_objects{end+1}  = new_FDE;
             
-            % add rectangle
+            % add fde
             obj = obj.write_command( 'addfde;' );
-%             obj = obj.write_to_lsf_file( 'addfde;' );
             
-            % set rectangle properties
+            % set fde properties
             obj = obj.set_lum_object_properties( new_FDE );
             
         end     % end addFDE()

@@ -37,44 +37,29 @@ classdef c_lumericalFDTD < c_lumericalBase
         end
         
         
-%         function obj = addFDE(obj, varargin)
-%             % adds a FDE (finite difference eigenmode) solver to the
-%             % lumerical model
-%             %
-%             % Inputs:
-%             %   varargin
-%             %       Name-value pairs of form 'property name', property value
-%             %       See the primitives/c_rect.m class for valid properties
-%             %
-%             % Example:
-%             %   obj = obj.addFDE( 'name', 'timmy', 'x', 1e-6 );
-%             %       Draws a rectangle in lumerical, set it's name to 'timmy' and
-%             %       it's x position to 1e-6
-%             %       The equivalent lumerical commands are:
-%             %           addrect;
-%             %           set('name','timmy');
-%             %           set('x', 1e-6);  
-%             
-%             % add lumerical object
-%             new_FDE                 = c_FDE( varargin{:} );
-%             obj.lum_objects{end+1}  = new_FDE;
-%             
-%             % add rectangle
-%             obj = obj.write_command( 'addfde;' );
-% %             obj = obj.write_to_lsf_file( 'addfde;' );
-%             
-%             % set rectangle properties
-%             obj = obj.set_lum_object_properties( new_FDE );
-%             
-%         end     % end addFDE()
-        
-        
-%         function obj = findmodes(obj)
-%             % finds modes
-%             % to set the inputs, set them with the FDE object before
-%             % calling the modesolver
-%             obj = obj.write_command( 'findmodes;' );
-%         end
+        function obj = addFDTD(obj, varargin)
+            % adds a FDTD solver region to the
+            % lumerical model
+            %
+            % Inputs:
+            %   varargin
+            %       Name-value pairs of form 'property name', property value
+            %       See the primitives/c_FDTD.m class for valid properties
+            %
+            % Example:
+
+            
+            % add lumerical object
+            new_FDTD                = c_FDTD( varargin{:} );
+            obj.lum_objects{end+1}  = new_FDTD;
+            
+            % add fdtd
+            obj = obj.write_command( 'addfdtd;' );
+            
+            % set fdtd properties
+            obj = obj.set_lum_object_properties( new_FDTD );
+            
+        end     % end addFDTD()
 
         
     end     % end methods

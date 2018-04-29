@@ -1,0 +1,18 @@
+addcircle;
+set('name', 'circle1');
+set('x', 0);
+set('y', 0);
+set('z', 0);
+set('z span', 6e-07);
+set('radius', 2.5e-08);
+set('material', 'Ag (Silver) - Palik (0-2um)');
+
+addfdtd;
+set('dimension', '2D');
+set('simulation time', 2e-10);
+set('x', 0);
+set('y', 0);
+set('z', 0);
+set('x span', 8e-07);
+set('y span', 8e-07);
+

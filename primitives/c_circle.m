@@ -36,7 +36,7 @@ classdef c_circle < c_lumBaseObject
 % z
 % z max
 % z min
-z span
+% z span
     
     properties
         
@@ -48,7 +48,7 @@ z span
     
     methods
         
-        function obj = c_rect( varargin )
+        function obj = c_circle( varargin )
             % constructor
             %
             % inputs:

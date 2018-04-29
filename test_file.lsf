@@ -1,0 +1,15 @@
+addrect;
+set('name', 'timmy');
+set('x min', -5e-07);
+set('x max', 5e-07);
+set('y min', -5e-07);
+set('y max', 5e-07);
+set('index', 3);
+rect_xmin = get('x min');
+
+addcircle;
+set('name', 'timmy');
+set('x', 2e-06);
+set('y', 1e-06);
+set('index', 2.4);
+
