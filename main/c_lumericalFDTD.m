@@ -37,7 +37,7 @@ classdef c_lumericalFDTD < c_lumericalBase
         end
         
         
-        function obj = addFDTD(obj, varargin)
+        function obj = addfdtd(obj, varargin)
             % adds a FDTD solver region to the
             % lumerical model
             %
@@ -59,7 +59,31 @@ classdef c_lumericalFDTD < c_lumericalBase
             % set fdtd properties
             obj = obj.set_lum_object_properties( new_FDTD );
             
-        end     % end addFDTD()
+        end     % end addfdtd()
+        
+        
+        function obj = addtfsf(obj, varargin)
+            % adds a TFSF source
+            %
+            % Inputs:
+            %   varargin
+            %       Name-value pairs of form 'property name', property value
+            %       See the primitives/c_FDTD.m class for valid properties
+            %
+            % Example:
+
+            
+            % add lumerical object
+            new_obj                 = c_tfsf( varargin{:} );
+            obj.lum_objects{end+1}  = new_obj;
+            
+            % add fdtd
+            obj = obj.write_command( 'addtfsf;' );
+            
+            % set fdtd properties
+            obj = obj.set_lum_object_properties( new_obj );
+            
+        end     % end addfdtd()
 
         
     end     % end methods

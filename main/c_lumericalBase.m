@@ -214,7 +214,7 @@ classdef (Abstract) c_lumericalBase
             %       See the primitives/c_circle.m class for valid properties
             %
             % Example:
-            %   obj = obj.add_circle( 'name', 'timmy', 'x', 1e-6 );
+            %   obj = obj.addcircle( 'name', 'timmy', 'x', 1e-6 );
             %       Draws a circle in lumerical, set it's name to 'timmy' and
             %       it's x position to 1e-6
             %       The equivalent lumerical commands are:
@@ -232,8 +232,30 @@ classdef (Abstract) c_lumericalBase
             % set rectangle properties
             obj = obj.set_lum_object_properties( new_circle );
             
-            
         end     % end addcircle()
+        
+        
+        function obj = addmesh(obj, varargin)
+            % adds a mesh region object to the script/lumerical program
+            %
+            % Inputs:
+            %   varargin
+            %       Name-value pairs of form 'property name', property value
+            %       See the primitives/c_circle.m class for valid properties
+            %
+            % Example:
+            
+            % add lumerical object
+            new_mesh                = c_mesh( varargin{:} );
+            obj.lum_objects{end+1}  = new_mesh;
+            
+            % add mesh command
+            obj = obj.write_command( 'addmesh;' ); 
+            
+            % set mesh properties
+            obj = obj.set_lum_object_properties( new_mesh );
+            
+        end     % end addmesh()
         
         
         function obj = setprop(obj, prop_name, prop_val)

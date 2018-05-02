@@ -1,5 +1,5 @@
-classdef c_mesh < c_lumBaseObject
-% Lumerical mesh object
+classdef c_tfsf < c_lumBaseObject
+% Lumerical TFSF source
 % 
 % author: bohan
 %
