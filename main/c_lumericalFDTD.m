@@ -62,13 +62,17 @@ classdef c_lumericalFDTD < c_lumericalBase
         end     % end addfdtd()
         
         
+        % ---------------------------
+        % Source functions
+        % ---------------------------
+        
         function obj = addtfsf(obj, varargin)
             % adds a TFSF source
             %
             % Inputs:
             %   varargin
             %       Name-value pairs of form 'property name', property value
-            %       See the primitives/c_FDTD.m class for valid properties
+            %       See the primitives/c_tfsf.m class for valid properties
             %
             % Example:
 
@@ -83,7 +87,31 @@ classdef c_lumericalFDTD < c_lumericalBase
             % set fdtd properties
             obj = obj.set_lum_object_properties( new_obj );
             
-        end     % end addfdtd()
+        end     % end addtfsf()
+        
+        
+        function obj = addmode(obj, varargin)
+            % adds a mode source
+            %
+            % Inputs:
+            %   varargin
+            %       Name-value pairs of form 'property name', property value
+            %       See the primitives/c_modesource.m class for valid properties
+            %
+            % Example:
+
+            
+            % add lumerical object
+            new_obj                 = c_modesource( varargin{:} );
+            obj.lum_objects{end+1}  = new_obj;
+            
+            % add fdtd
+            obj = obj.write_command( 'addmode;' );
+            
+            % set fdtd properties
+            obj = obj.set_lum_object_properties( new_obj );
+            
+        end     % end addmode()
 
         
     end     % end methods

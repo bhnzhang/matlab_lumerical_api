@@ -32,4 +32,5 @@ set('x span', 1e-07);
 set('y span', 1e-07);
 set('wavelength start', 3e-07);
 set('wavelength stop', 4e-07);
+setglobalmonitor("frequency points",100);
 

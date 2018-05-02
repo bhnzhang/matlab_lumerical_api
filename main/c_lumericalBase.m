@@ -173,91 +173,6 @@ classdef (Abstract) c_lumericalBase
         end     % end appclose()
         
         
-        function obj = addrect(obj, varargin)
-            % adds a rectangle object to the script/lumerical program
-            %
-            % Inputs:
-            %   varargin
-            %       Name-value pairs of form 'property name', property value
-            %       See the primitives/c_rect.m class for valid properties
-            %
-            % Example:
-            %   obj = obj.addrect( 'name', 'timmy', 'x', 1e-6 );
-            %       Draws a rectangle in lumerical, set it's name to 'timmy' and
-            %       it's x position to 1e-6
-            %       The equivalent lumerical commands are:
-            %           addrect;
-            %           set('name','timmy');
-            %           set('x', 1e-6);  
-            
-            % add lumerical object
-            new_rect               = c_rect( varargin{:} );
-            obj.lum_objects{end+1} = new_rect;
-            
-            % add rectangle
-            obj = obj.write_command( 'addrect;' ); 
-%             obj = obj.write_to_lsf_file( 'addrect;' );
-            
-            % set rectangle properties
-            obj = obj.set_lum_object_properties( new_rect );
-            
-            
-        end     % end addrect()
-        
-        
-        function obj = addcircle(obj, varargin)
-            % adds a circle object to the script/lumerical program
-            %
-            % Inputs:
-            %   varargin
-            %       Name-value pairs of form 'property name', property value
-            %       See the primitives/c_circle.m class for valid properties
-            %
-            % Example:
-            %   obj = obj.addcircle( 'name', 'timmy', 'x', 1e-6 );
-            %       Draws a circle in lumerical, set it's name to 'timmy' and
-            %       it's x position to 1e-6
-            %       The equivalent lumerical commands are:
-            %           addcircle;
-            %           set('name','timmy');
-            %           set('x', 1e-6);  
-            
-            % add lumerical object
-            new_circle              = c_circle( varargin{:} );
-            obj.lum_objects{end+1}  = new_circle;
-            
-            % add rectangle
-            obj = obj.write_command( 'addcircle;' ); 
-            
-            % set rectangle properties
-            obj = obj.set_lum_object_properties( new_circle );
-            
-        end     % end addcircle()
-        
-        
-        function obj = addmesh(obj, varargin)
-            % adds a mesh region object to the script/lumerical program
-            %
-            % Inputs:
-            %   varargin
-            %       Name-value pairs of form 'property name', property value
-            %       See the primitives/c_circle.m class for valid properties
-            %
-            % Example:
-            
-            % add lumerical object
-            new_mesh                = c_mesh( varargin{:} );
-            obj.lum_objects{end+1}  = new_mesh;
-            
-            % add mesh command
-            obj = obj.write_command( 'addmesh;' ); 
-            
-            % set mesh properties
-            obj = obj.set_lum_object_properties( new_mesh );
-            
-        end     % end addmesh()
-        
-        
         function obj = setprop(obj, prop_name, prop_val)
             % adds a set property command in lumerical
             %
@@ -355,7 +270,7 @@ classdef (Abstract) c_lumericalBase
         end     % end addcomment()
         
         
-        function obj = saveresult( obj, monitor_name, dataset, variable_name )
+        function obj = getresult( obj, monitor_name, dataset, variable_name )
             % Saves the result with name "dataset" of a monitor/analysis
             % object "monitor_name" into lumerical variable "variablename"
             %
@@ -377,6 +292,34 @@ classdef (Abstract) c_lumericalBase
             
             % save variable in lumerical
             obj = obj.write_command( sprintf('%s = getresult(''%s'', ''%s'');', variable_name, monitor_name, dataset ) ); 
+            
+            % document variable
+            obj.list_of_variables{end+1} = variable_name;
+            
+        end     % end getresult()
+        
+        
+        function obj = getparameter( obj, dataset, attribute_name, variable_name )
+            % Saves the attribute named "attribute" from the dataset
+            % "dataset" into lumerical variable "variable_name"
+            % Performs same function as getparameter in the lumerical
+            % scripting language
+            %
+            % Inputs:
+            %   dataset
+            %       type: string
+            %       desc: name of data to grab attribute from
+            %   attribute_name
+            %       type: string
+            %       desc: name of attribute
+            %   variable_name
+            %       type: string
+            %       desc: name of lumerical variable to save to
+            %
+            % Example:
+            
+            % save variable in lumerical
+            obj = obj.write_command( sprintf('%s = getparameter(%s, ''%s'');', variable_name, dataset, attribute_name ) ); 
             
             % document variable
             obj.list_of_variables{end+1} = variable_name;
@@ -463,7 +406,132 @@ classdef (Abstract) c_lumericalBase
             % switches the solver to LAYOUT mode
             obj = obj.write_command( 'switchtolayout;' );
         end
+        
+        
+        % ---------------------------
+        % Structure adding functions
+        % ---------------------------
+        
+        function obj = addrect(obj, varargin)
+            % adds a rectangle object to the script/lumerical program
+            %
+            % Inputs:
+            %   varargin
+            %       Name-value pairs of form 'property name', property value
+            %       See the primitives/c_rect.m class for valid properties
+            %
+            % Example:
+            %   obj = obj.addrect( 'name', 'timmy', 'x', 1e-6 );
+            %       Draws a rectangle in lumerical, set it's name to 'timmy' and
+            %       it's x position to 1e-6
+            %       The equivalent lumerical commands are:
+            %           addrect;
+            %           set('name','timmy');
+            %           set('x', 1e-6);  
             
+            % add lumerical object
+            new_rect               = c_rect( varargin{:} );
+            obj.lum_objects{end+1} = new_rect;
+            
+            % lumerical command
+            obj = obj.write_command( 'addrect;' ); 
+            
+            % set properties
+            obj = obj.set_lum_object_properties( new_rect );
+            
+            
+        end     % end addrect()
+        
+        
+        function obj = addcircle(obj, varargin)
+            % adds a circle object to the script/lumerical program
+            %
+            % Inputs:
+            %   varargin
+            %       Name-value pairs of form 'property name', property value
+            %       See the primitives/c_circle.m class for valid properties
+            %
+            % Example:
+            %   obj = obj.addcircle( 'name', 'timmy', 'x', 1e-6 );
+            %       Draws a circle in lumerical, set it's name to 'timmy' and
+            %       it's x position to 1e-6
+            %       The equivalent lumerical commands are:
+            %           addcircle;
+            %           set('name','timmy');
+            %           set('x', 1e-6);  
+            
+            % add lumerical object
+            new_circle              = c_circle( varargin{:} );
+            obj.lum_objects{end+1}  = new_circle;
+            
+            % lumerical command
+            obj = obj.write_command( 'addcircle;' ); 
+            
+            % set properties
+            obj = obj.set_lum_object_properties( new_circle );
+            
+        end     % end addcircle()
+        
+        
+        % ---------------------------
+        % Simulation region functions
+        % ---------------------------
+        
+        function obj = addmesh(obj, varargin)
+            % adds a mesh region object to the script/lumerical program
+            %
+            % Inputs:
+            %   varargin
+            %       Name-value pairs of form 'property name', property value
+            %       See the primitives/c_mesh.m class for valid properties
+            %
+            % Example:
+            
+            % add lumerical object
+            new_mesh                = c_mesh( varargin{:} );
+            obj.lum_objects{end+1}  = new_mesh;
+            
+            % lumerical command
+            obj = obj.write_command( 'addmesh;' ); 
+            
+            % set properties
+            obj = obj.set_lum_object_properties( new_mesh );
+            
+        end     % end addmesh()
+        
+        
+        % ---------------------------
+        % Source functions
+        % ---------------------------
+        
+        
+        % ---------------------------
+        % Monitor functions
+        % ---------------------------
+        
+        function obj = addindex(obj, varargin)
+            % adds a index monitor object to the script/lumerical program
+            % supported in FDTD and MODE
+            %
+            % Inputs:
+            %   varargin
+            %       Name-value pairs of form 'property name', property value
+            %       See the primitives/c_indexmonitor.m class for valid properties
+            %
+            % Example:
+            
+            % add lumerical object
+            new_obj                 = c_indexmonitor( varargin{:} );
+            obj.lum_objects{end+1}  = new_obj;
+            
+            % lumerical command
+            obj = obj.write_command( 'addindex;' ); 
+            
+            % set properties
+            obj = obj.set_lum_object_properties( new_obj );
+            
+        end     % end addindex()
+        
         
     end     % end methods
     
