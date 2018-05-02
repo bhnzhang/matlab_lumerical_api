@@ -299,10 +299,10 @@ classdef (Abstract) c_lumericalBase
         end     % end getresult()
         
         
-        function obj = getparameter( obj, dataset, attribute_name, variable_name )
+        function obj = getattribute( obj, dataset, attribute_name, variable_name )
             % Saves the attribute named "attribute" from the dataset
             % "dataset" into lumerical variable "variable_name"
-            % Performs same function as getparameter in the lumerical
+            % Performs same function as getattribute in the lumerical
             % scripting language
             %
             % Inputs:
@@ -319,12 +319,40 @@ classdef (Abstract) c_lumericalBase
             % Example:
             
             % save variable in lumerical
-            obj = obj.write_command( sprintf('%s = getparameter(%s, ''%s'');', variable_name, dataset, attribute_name ) ); 
+            obj = obj.write_command( sprintf('%s = getattribute(%s, ''%s'');', variable_name, dataset, attribute_name ) ); 
             
             % document variable
             obj.list_of_variables{end+1} = variable_name;
             
-        end     % end getresult()
+        end     % end getparameter()
+        
+        
+        function obj = getparameter( obj, dataset, parameter_name, variable_name )
+            % Saves the parameter named "parameter_name" from the dataset
+            % "dataset" into lumerical variable "variable_name"
+            % Performs same function as getparameter in the lumerical
+            % scripting language
+            %
+            % Inputs:
+            %   dataset
+            %       type: string
+            %       desc: name of data to grab attribute from
+            %   parameter_name
+            %       type: string
+            %       desc: name of attribute
+            %   variable_name
+            %       type: string
+            %       desc: name of lumerical variable to save to
+            %
+            % Example:
+            
+            % save variable in lumerical
+            obj = obj.write_command( sprintf('%s = getparameter(%s, ''%s'');', variable_name, dataset, parameter_name ) ); 
+            
+            % document variable
+            obj.list_of_variables{end+1} = variable_name;
+            
+        end     % end getparameter()
         
         
         function [obj, var] = getvar( obj, variable_name )

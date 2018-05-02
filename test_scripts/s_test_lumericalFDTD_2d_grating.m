@@ -109,12 +109,23 @@ obj = obj.addindex( 'name', 'index_monitor1', ...
                 
 % get index preview
 obj = obj.getresult( 'index_monitor1', 'index preview', 'index_prev_var' );
+obj = obj.getattribute( 'index_prev_var', 'index_x', 'index_profile' );
+obj = obj.getparameter( 'index_prev_var', 'x', 'x_coords' );
+obj = obj.getparameter( 'index_prev_var', 'y', 'y_coords' );
 
 % execute commands
 obj = obj.execute_commands();             
                 
 % transfer property to matlab
-[ obj, index_preview ] = obj.getvar( 'index_prev_var' );
+[ obj, index_preview ]  = obj.getvar( 'index_profile' );
+[ obj, x ]              = obj.getvar( 'x_coords' );
+[ obj, y ]              = obj.getvar( 'y_coords' );
+
+% plot index
+figure;
+imagesc( x, y, real(index_preview).' );
+set(gca, 'ydir', 'normal');
+title('index preview');
 
 % 
 % % add FDE

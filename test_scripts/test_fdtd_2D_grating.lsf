@@ -126,4 +126,7 @@ set('x max', 8.5e-06);
 set('y min', -1e-06);
 set('y max', 1e-06);
 index_prev_var = getresult('index_monitor1', 'index preview');
+index_profile = getattribute(index_prev_var, 'index_x');
+x_coords = getparameter(index_prev_var, 'x');
+y_coords = getparameter(index_prev_var, 'y');
 
