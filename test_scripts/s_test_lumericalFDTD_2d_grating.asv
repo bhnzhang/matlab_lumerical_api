@@ -25,7 +25,7 @@ output_angle    = 15 * (pi/180);
 period          = 700e-9;      
 duty_cycle      = 0.8;
 tooth_width     = period * duty_cycle;
-etch_depth      = 0.05e-6;
+etch_depth      = 0.1e-6;
 n_periods       = 10;
 
 % inputs
@@ -70,8 +70,8 @@ end
 % make sim domain
 sim_domain_left     = 0;
 sim_domain_right    = waveguide_length + 1e-6;
-sim_domain_top      = 1e-6;
-sim_domain_bot      = -1e-6;
+sim_domain_top      = 2e-6;
+sim_domain_bot      = -2e-6;
 obj = obj.addfdtd(  'x min', sim_domain_left, ...
                     'x max', sim_domain_right, ...
                     'y min', sim_domain_bot, ...
@@ -96,14 +96,123 @@ obj             = obj.addmode( 'name', 'wg_mode_source', ...
                                'center wavelength', lambda0, ...
                                'wavelength span', 100e-9 );
                            
-                           
-                           
+% add refractive index monitor
+obj = obj.addindex( 'name', 'index_monitor1', ...
+                    'x min', sim_domain_left, ...
+                    'x max', sim_domain_right, ...
+                    'y min', sim_domain_bot, ...
+                    'y max', sim_domain_top );
+
+                
 % % set global monitor by running a custom command
 % obj = obj.write_command( 'setglobalmonitor("frequency points",100);' );
                 
+% get index preview
+obj = obj.getresult( 'index_monitor1', 'index preview', 'index_prev_var' );
+obj = obj.getattribute( 'index_prev_var', 'index_x', 'index_profile' );
+obj = obj.getparameter( 'index_prev_var', 'x', 'x_coords' );
+obj = obj.getparameter( 'index_prev_var', 'y', 'y_coords' );
+
 % execute commands
 obj = obj.execute_commands();             
                 
+% transfer property to matlab
+[ obj, index_preview ]  = obj.getvar( 'index_profile' );
+[ obj, x ]              = obj.getvar( 'x_coords' );
+[ obj, y ]              = obj.getvar( 'y_coords' );
+
+% plot index
+figure;
+imagesc( x, y, real(index_preview).' );
+set(gca, 'ydir', 'normal');
+title('index preview');
+
+% add DFT field and power monitor across entire domain
+obj = obj.addpower( 'name', 'field_power_monitor1', ...
+                    'simulation type', '2D Z-normal', ...
+                    'monitor type', '2D Z-normal', ...
+                    'x min', sim_domain_left, ...
+                    'x max', sim_domain_right, ...
+                    'y min', sim_domain_bot, ...
+                    'y max', sim_domain_top, ...
+                    'override global monitor settings', true, ...
+                    'use source limits', true, ...
+                    'frequency points', 20, ...
+                    'output Px', true, ...
+                    'output Py', true );
+
+% add DFT for transmission through upper region
+obj = obj.addpower( 'name', 'field_power_monitor1', ...
+                    'simulation type', '2D Z-normal', ...
+                    'monitor type', 'Linear X', ...
+                    'x min', sim_domain_left, ...
+                    'x max', sim_domain_right, ...
+                    'y', sim_
+                    'override global monitor settings', true, ...
+                    'use source limits', true, ...
+                    'frequency points', 20, ...
+                    'output Px', true, ...
+                    'output Py', true ); 
+                
+% save the project
+obj = obj.save('test_fdtd_2D_grating');
+                
+% add run simulation command
+obj = obj.run();
+                
+% execute commands
+obj = obj.execute_commands();
+
+
+% get results from dft monitor
+obj = obj.getresult( 'field_power_monitor1', 'Ez', 'Ez' );
+obj = obj.getresult( 'field_power_monitor1', 'Px', 'Px' );
+obj = obj.getresult( 'field_power_monitor1', 'Py', 'Py' );
+obj = obj.getresult( 'field_power_monitor1', 'x', 'x' );
+obj = obj.getresult( 'field_power_monitor1', 'y', 'y' );
+obj = obj.getresult( 'field_power_monitor1', 'f', 'f' );
+obj = obj.execute_commands();
+[ obj, Ez ]     = obj.getvar( 'Ez' );
+[ obj, Px ]     = obj.getvar( 'Px' );
+[ obj, Py ]     = obj.getvar( 'Py' );
+[ obj, x ]      = obj.getvar( 'x' );
+[ obj, y ]      = obj.getvar( 'y' );
+[ obj, freq ]   = obj.getvar( 'f' );
+
+
+% grab field/power at center wavelength
+Ez_center_freq = Ez( :, :, :, round(end/2) );
+Px_center_freq = Px( :, :, :, round(end/2) );
+Py_center_freq = Py( :, :, :, round(end/2) );
+
+% plot field, real, center wavelength
+figure;
+imagesc( x, y, real(Ez_center_freq).' );
+xlabel('x'); ylabel('y');
+axis image; colorbar;
+title('E_z center frequency');
+
+% plot power, x component, center wavelength
+figure;
+imagesc( x, y, real(Px_center_freq.') );
+xlabel('x'); ylabel('y');
+axis image; colorbar;
+title('P_x (real) center frequency');
+
+% plot power, x component, center wavelength, log scale
+figure;
+imagesc( x, y, 10*log10( real(Px_center_freq.') + abs(min(real(Px_center_freq(:)))) ) );
+xlabel('x'); ylabel('y');
+axis image; colorbar;
+title('P_x (real, dB) center frequency');
+
+% plot power, y component, center wavelength
+figure;
+imagesc( x, y, real(Py_center_freq.') );
+xlabel('x'); ylabel('y');
+axis image; colorbar;
+title('P_y (real) center frequency');
+
 % 
 % % add FDE
 % obj = obj.addFDE(   'x min', -3e-6, 'x max', 3e-6,  ...

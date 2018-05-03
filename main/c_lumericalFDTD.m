@@ -113,6 +113,33 @@ classdef c_lumericalFDTD < c_lumericalBase
             
         end     % end addmode()
 
+        % ---------------------------
+        % Monitor functions
+        % ---------------------------
+        
+        function obj = addpower(obj, varargin)
+            % adds a frequency domain, field and power monitor to the
+            % simulation
+            %
+            % Inputs:
+            %   varargin
+            %       Name-value pairs of form 'property name', property value
+            %       See the primitives/c_indexmonitor.m class for valid properties
+            %
+            % Example:
+            
+            % add lumerical object
+            new_obj                 = c_field_and_power_monitor( varargin{:} );
+            obj.lum_objects{end+1}  = new_obj;
+            
+            % lumerical command
+            obj = obj.write_command( 'addpower;' ); 
+            
+            % set properties
+            obj = obj.set_lum_object_properties( new_obj );
+            
+        end     % end addindex()
+        
         
     end     % end methods
     

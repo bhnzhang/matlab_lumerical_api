@@ -25,8 +25,8 @@ output_angle    = 15 * (pi/180);
 period          = 700e-9;      
 duty_cycle      = 0.8;
 tooth_width     = period * duty_cycle;
-etch_depth      = 0.05e-6;
-n_periods       = 10;
+etch_depth      = 0.1e-6;
+n_periods       = 20;
 
 % inputs
 notes       = 'testing lumerical fdtd using a 2D grating coupler';
@@ -70,8 +70,10 @@ end
 % make sim domain
 sim_domain_left     = 0;
 sim_domain_right    = waveguide_length + 1e-6;
-sim_domain_top      = 1e-6;
-sim_domain_bot      = -1e-6;
+sim_domain_top      = 2e-6;
+sim_domain_bot      = -2e-6;
+dx                  = 10e-9;
+dy                  = 10e-9;
 obj = obj.addfdtd(  'x min', sim_domain_left, ...
                     'x max', sim_domain_right, ...
                     'y min', sim_domain_bot, ...
@@ -81,8 +83,8 @@ obj = obj.addfdtd(  'x min', sim_domain_left, ...
                     'mesh type', 'uniform', ...
                     'define x mesh by', 'maximum mesh step', ...
                     'define y mesh by', 'maximum mesh step', ...
-                    'dx', 10e-9, ...
-                    'dy', 10e-9 );
+                    'dx', dx, ...
+                    'dy', dy );
 
 % add source
 source_pos_x    = 0.25e-6;
@@ -126,6 +128,91 @@ figure;
 imagesc( x, y, real(index_preview).' );
 set(gca, 'ydir', 'normal');
 title('index preview');
+
+% add DFT field and power monitor across entire domain
+obj = obj.addpower( 'name', 'field_power_monitor1', ...
+                    'simulation type', '2D Z-normal', ...
+                    'monitor type', '2D Z-normal', ...
+                    'x min', sim_domain_left, ...
+                    'x max', sim_domain_right, ...
+                    'y min', sim_domain_bot, ...
+                    'y max', sim_domain_top, ...
+                    'override global monitor settings', true, ...
+                    'use source limits', true, ...
+                    'frequency points', 20, ...
+                    'output Px', true, ...
+                    'output Py', true );
+
+% add DFT for transmission through upper region
+obj = obj.addpower( 'name', 'monitor_up', ...
+                    'simulation type', '2D Z-normal', ...
+                    'monitor type', 'Linear X', ...
+                    'x min', sim_domain_left, ...
+                    'x max', sim_domain_right, ...
+                    'y', sim_domain_top - 2*dy, ...
+                    'override global monitor settings', true, ...
+                    'use source limits', true, ...
+                    'frequency points', 20 ); 
+                
+% save the project
+obj = obj.save('test_fdtd_2D_grating');
+                
+% add run simulation command
+obj = obj.run();
+                
+% execute commands
+obj = obj.execute_commands();
+
+
+% get results from dft monitor
+% obj = obj.getresult( 'field_power_monitor1', 'Ez', 'Ez' );
+% obj = obj.getresult( 'field_power_monitor1', 'Px', 'Px' );
+% obj = obj.getresult( 'field_power_monitor1', 'Py', 'Py' );
+obj = obj.getresult( 'field_power_monitor1', 'x', 'x' );
+obj = obj.getresult( 'field_power_monitor1', 'y', 'y' );
+obj = obj.getresult( 'field_power_monitor1', 'f', 'f' );
+% obj = obj.getresult( 'monitor_up'
+obj = obj.execute_commands();
+% [ obj, Ez ]     = obj.getvar( 'Ez' );
+% [ obj, Px ]     = obj.getvar( 'Px' );
+% [ obj, Py ]     = obj.getvar( 'Py' );
+[ obj, x ]      = obj.getvar( 'x' );
+[ obj, y ]      = obj.getvar( 'y' );
+[ obj, freq ]   = obj.getvar( 'f' );
+
+
+% % grab field/power at center wavelength
+% Ez_center_freq = Ez( :, :, :, round(end/2) );
+% Px_center_freq = Px( :, :, :, round(end/2) );
+% Py_center_freq = Py( :, :, :, round(end/2) );
+
+% % plot field, real, center wavelength
+% figure;
+% imagesc( x, y, real(Ez_center_freq).' );
+% xlabel('x'); ylabel('y');
+% axis image; colorbar;
+% title('E_z center frequency');
+% 
+% % plot power, x component, center wavelength
+% figure;
+% imagesc( x, y, real(Px_center_freq.') );
+% xlabel('x'); ylabel('y');
+% axis image; colorbar;
+% title('P_x (real) center frequency');
+% 
+% % plot power, x component, center wavelength, log scale
+% figure;
+% imagesc( x, y, 10*log10( real(Px_center_freq.') + abs(min(real(Px_center_freq(:)))) ) );
+% xlabel('x'); ylabel('y');
+% axis image; colorbar;
+% title('P_x (real, dB) center frequency');
+% 
+% % plot power, y component, center wavelength
+% figure;
+% imagesc( x, y, real(Py_center_freq.') );
+% xlabel('x'); ylabel('y');
+% axis image; colorbar;
+% title('P_y (real) center frequency');
 
 % 
 % % add FDE

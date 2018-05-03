@@ -435,6 +435,21 @@ classdef (Abstract) c_lumericalBase
             obj = obj.write_command( 'switchtolayout;' );
         end
         
+        function obj = run(obj)
+            % run simulation
+            obj = obj.write_command('run;');
+        end
+        
+        function obj = save(obj, filename)
+            % save to project file
+            %
+            % Inputs:
+            %   filename
+            %       type: string
+            %       desc: name of file to save to (full path optional)
+            obj = obj.write_command( sprintf( 'save(''%s'');', filename ) );
+        end
+        
         
         % ---------------------------
         % Structure adding functions
