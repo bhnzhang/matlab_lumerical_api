@@ -151,8 +151,6 @@ classdef c_lumericalFDTD < c_lumericalBase
             % Stitches together synthesized index distribution and saves
             % results to text file for Lumerical FDTD to read
             %
-            % Currently only does 2D, isotropic index
-            %
             % Inputs
             %   N
             %       type: double, matrix
@@ -195,14 +193,10 @@ classdef c_lumericalFDTD < c_lumericalBase
                 fprintf( N_txt_fid, '%s\n', [ num2str(2) ' ' num2str(0) ' ' num2str(1) ] );                     % z coordinates, dummy in 2D
                 
                 % unwrap index
-                N = N.';                                                    % first must transpose (now dimensions are x vs y)
-                N = N(:);                                                   % now unwrap columns first
-                N = [ N; N ];                                               % double the length for z
+                N = N.';    % first must transpose (now dimensions are x vs y)
+                N = N(:);   % now unwrap
                 
                 % write index
-                for ii = 1:length(N)
-                    fprintf( N_txt_fid, '%s\n', [ num2str( real(N(ii)) ) ' ' num2str( imag(N(ii)) ) ] );
-                end
                 
             end     % end if
             
@@ -210,9 +204,6 @@ classdef c_lumericalFDTD < c_lumericalBase
             status = fclose( N_txt_fid );
             
         end     % end write_index_to_txt() 
-        
-        
-        function obj = 
         
         
     end     % end methods
