@@ -147,6 +147,54 @@ classdef c_lumericalFDTD < c_lumericalBase
         % Functions for importing a custom index distribution into
         % lumerical
         
+        function obj = import_index_to_lumerical( obj, N, units, x, y, z )
+            % Imports index distribution N into lumerical
+            % This is the function the end user will want to call
+            %
+            % Calls obj.write_index_to_txt and then calls obj.importnk
+            %
+            % currently only does 2D, isotropic index (can be complex)
+            %
+            % Inputs
+            %   N
+            %       desc: Index distribution.
+            %             If 2D simulation, dimensions are y vs x (x is
+            %             propagation direction)
+            %             If 3D simulation, dimensions are ?? Not
+            %             implemented, but I think will be x vs y vs z
+            %   units
+            %       type: string
+            %       desc: specifies spatial units, either 'm', 'cm', 'mm',
+            %             'microns', or 'nm'
+            %   x
+            %       type: double, array
+            %       desc: x coordinate array
+            %   y
+            %       type: double, array
+            %       desc: y coordinate array
+            %   z
+            %       type: double, array
+            %       desc: z coordinate array, optional (only needed for 3d
+            %             simulations)
+            
+            if nargin < 5
+                is_2d = true;
+            else
+                is_2d = false;
+            end
+            
+            % write index to txt file
+            if is_2d
+                obj = obj.write_index_to_txt( N, x, y );
+            else
+                obj = obj.write_index_to_txt( N, x, y, z );
+            end
+            
+            % import object to lumerical
+            obj = importnk( obj, filename, file_units, x0, y0, z0, reverse_index_order )
+            
+        end
+        
         function obj = write_index_to_txt(obj, N, x, y, z)
             % Stitches together synthesized index distribution and saves
             % results to text file for Lumerical FDTD to read
@@ -212,7 +260,7 @@ classdef c_lumericalFDTD < c_lumericalBase
         end     % end write_index_to_txt() 
         
         
-        function obj = importnk( filename, file_units, x0, y0, z0, reverse_index_order )
+        function obj = importnk( obj, filename, file_units, x0, y0, z0, reverse_index_order )
             % Imports an index distribution text file into Lumerical
             % See for additional documentation:
             % https://kb.lumerical.com/en/ref_scripts_importnk.html
@@ -231,16 +279,27 @@ classdef c_lumericalFDTD < c_lumericalBase
             %       desc: data origin in global coordinates
             %   y0
             %       type: double, scalar
-            %       desc: data origin in g
+            %       desc: data origin in global coordinates
             %   z0
-            %       type:
-            %       desc:
+            %       type: double, scalar
+            %       desc: data origin in global coordinates
             %   reverse_index_order
-            %       type:
-            %       desc:
+            %       type: 0 or 1
+            %       desc: set to 1 to reverse how indices are interpreted.
+            %             Set to 0 in most scenarios
+            
+            % add lumerical object
+            new_obj                 = c_importnk();
+            obj.lum_objects{end+1}  = new_obj;
+            
+            % lumerical command
+            obj = obj.write_command( 'addimport;' );
+            obj = obj.write_command( [ 'importnk(''' filename ''',''' file_units ''',' ...
+                                       num2str(x0) ',' num2str(y0) ',' num2str(z0), ...
+                                       ',' num2str(reverse_index_order) ');' ] ); 
             
             
-        end
+        end     % end importnk()
         
         
     end     % end methods

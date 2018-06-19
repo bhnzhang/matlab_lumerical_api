@@ -147,13 +147,67 @@ classdef c_lumericalFDTD < c_lumericalBase
         % Functions for importing a custom index distribution into
         % lumerical
         
-        function obj = write_index_to_txt(obj, N, x, y, z)
+        function obj = import_index_to_lumerical( obj, N, units, x, y, z )
+            % Imports index distribution N into lumerical
+            % This is the function the end user will want to call
+            %
+            % Calls obj.write_index_to_txt and then calls obj.importnk
+            %
+            % currently only does 2D, isotropic index (can be complex)
+            %
+            % Inputs
+            %   N
+            %       desc: Index distribution.
+            %             If 2D simulation, dimensions are y vs x (x is
+            %             propagation direction)
+            %             If 3D simulation, dimensions are ?? Not
+            %             implemented, but I think will be x vs y vs z
+            %   units
+            %       type: string
+            %       desc: specifies spatial units, either 'm', 'cm', 'mm',
+            %             'microns', or 'nm'
+            %   x
+            %       type: double, array
+            %       desc: x coordinate array
+            %   y
+            %       type: double, array
+            %       desc: y coordinate array
+            %   z
+            %       type: double, array
+            %       desc: z coordinate array, optional (only needed for 3d
+            %             simulations)
+            
+            if nargin < 5
+                is_2d = true;
+            else
+                is_2d = false;
+            end
+            
+            % default filename
+            filename = 'N.txt';
+            
+            % write index to txt file
+            if is_2d
+                obj = obj.write_index_to_txt( filename, N, x, y );
+            else
+                obj = obj.write_index_to_txt( filename, N, x, y, z );
+            end
+            
+            % import object to lumerical
+            obj = obj.importnk( filename, units, 0, 0, 0, 0 );
+            
+        end
+        
+        function obj = write_index_to_txt(obj, filename, N, x, y, z)
             % Stitches together synthesized index distribution and saves
             % results to text file for Lumerical FDTD to read
             %
             % Currently only does 2D, isotropic index
             %
             % Inputs
+            %   filename
+            %       type: string
+            %       desc: name of file to save to (on current path)
             %   N
             %       type: double, matrix
             %       desc: Index distribution.
@@ -176,14 +230,14 @@ classdef c_lumericalFDTD < c_lumericalBase
             %   a text file with the index distribution formatted for
             %   reading into lumerical
             
-            if nargin < 5
+            if nargin < 6
                 is_2d_sim = true;
             else
                 is_2d_sim = false;
             end
             
             % open file
-            txt_fname   = [ obj.file_directory filesep 'N.txt' ];
+            txt_fname   = [ obj.file_directory filesep filename ];
             N_txt_fid   = fopen( txt_fname, 'wt+' );
             
             if is_2d_sim   

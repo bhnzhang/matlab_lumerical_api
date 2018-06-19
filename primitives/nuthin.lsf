@@ -1,3 +1,0 @@
-addimport;
-importnk('C:\Users\bz\git\matlab_lumerical_api\primitives\N.txt','microns',0,0,0,0);
-
