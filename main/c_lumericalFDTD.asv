@@ -151,6 +151,8 @@ classdef c_lumericalFDTD < c_lumericalBase
             % Stitches together synthesized index distribution and saves
             % results to text file for Lumerical FDTD to read
             %
+            % Currently only does 2D, isotropic index
+            %
             % Inputs
             %   N
             %       type: double, matrix
@@ -193,10 +195,14 @@ classdef c_lumericalFDTD < c_lumericalBase
                 fprintf( N_txt_fid, '%s\n', [ num2str(2) ' ' num2str(0) ' ' num2str(1) ] );                     % z coordinates, dummy in 2D
                 
                 % unwrap index
-                N = N.';    % first must transpose (now dimensions are x vs y)
-                N = N(:);   % now unwrap
+                N = N.';                                                    % first must transpose (now dimensions are x vs y)
+                N = N(:);                                                   % now unwrap columns first
+                N = [ N; N ];                                               % double the length for z
                 
                 % write index
+                for ii = 1:length(N)
+                    fprintf( N_txt_fid, '%s\n', [ num2str( real(N(ii)) ) ' ' num2str( imag(N(ii)) ) ] );
+                end
                 
             end     % end if
             
@@ -206,9 +212,85 @@ classdef c_lumericalFDTD < c_lumericalBase
         end     % end write_index_to_txt() 
         
         
+        function obj = importnk( filename, file_units, x0, y0, z0, reverse_index_order )
+            % Imports an index distribution text file into Lumerical
+            % See for additional documentation:
+            % https://kb.lumerical.com/en/ref_scripts_importnk.html
+            %
+            % Inputs:
+            %   filename
+            %       type: string
+            %       desc: name of file to load (and path if not on current
+            %             path)
+            %   file_units
+            %       type: string
+            %       desc: specifies spatial units, either 'm', 'cm', 'mm',
+            %             'microns', or 'nm'
+            %   x0
+            %       type: double, scalar
+            %       desc: data origin in global coordinates
+            %   y0
+            %       type: double, scalar
+            %       desc: data origin in g
+            %   z0
+            %       type:
+            %       desc:
+            %   reverse_index_order
+            %       type:
+            %       desc:
+            
+            
+        end
+        
+        
     end     % end methods
     
     
-end
+end     % end class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

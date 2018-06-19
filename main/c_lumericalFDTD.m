@@ -212,12 +212,96 @@ classdef c_lumericalFDTD < c_lumericalBase
         end     % end write_index_to_txt() 
         
         
-        function obj = 
+        function obj = importnk( obj, filename, file_units, x0, y0, z0, reverse_index_order )
+            % Imports an index distribution text file into Lumerical
+            % See for additional documentation:
+            % https://kb.lumerical.com/en/ref_scripts_importnk.html
+            %
+            % Inputs:
+            %   filename
+            %       type: string
+            %       desc: name of file to load (and path if not on current
+            %             path)
+            %   file_units
+            %       type: string
+            %       desc: specifies spatial units, either 'm', 'cm', 'mm',
+            %             'microns', or 'nm'
+            %   x0
+            %       type: double, scalar
+            %       desc: data origin in global coordinates
+            %   y0
+            %       type: double, scalar
+            %       desc: data origin in global coordinates
+            %   z0
+            %       type: double, scalar
+            %       desc: data origin in global coordinates
+            %   reverse_index_order
+            %       type: 0 or 1
+            %       desc: set to 1 to reverse how indices are interpreted.
+            %             Set to 0 in most scenarios
+            
+            % add lumerical object
+            new_obj                 = c_importnk();
+            obj.lum_objects{end+1}  = new_obj;
+            
+            % lumerical command
+            obj = obj.write_command( 'addimport;' );
+            obj = obj.write_command( [ 'importnk(''' filename ''',''' file_units ''',' ...
+                                       num2str(x0) ',' num2str(y0) ',' num2str(z0), ...
+                                       ',' num2str(reverse_index_order) ');' ] ); 
+            
+            
+        end     % end importnk()
         
         
     end     % end methods
     
     
-end
+end     % end class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
