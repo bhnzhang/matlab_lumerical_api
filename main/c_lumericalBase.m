@@ -576,6 +576,40 @@ classdef (Abstract) c_lumericalBase
         end     % end addindex()
         
         
+        % ---------------------------
+        % Loading and saving
+        % ---------------------------
+        
+        function obj = load_project( obj, filename )
+            % Loads lumerical project file
+            %
+            % Inputs:
+            %   filename
+            %       type: string
+            %       desc: filename (and path, if not in current directory)
+            %             of project to load
+            
+            % lumerical command
+            obj = obj.write_command( sprintf( 'load("%s");', filename ) );
+            
+        end     % end load_project()
+        
+        
+        function obj = save_project( obj, filename )
+            % Saves lumerical project file
+            %
+            % Inputs:
+            %   filename
+            %       type: string
+            %       desc: filename (and path, if not in current directory)
+            %             to save project to
+            
+            % lumerical command
+            obj = obj.write_command( sprintf( 'save("%s");', filename ) );
+            
+        end     % end save_project()
+        
+        
     end     % end methods
     
     

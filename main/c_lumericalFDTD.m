@@ -28,11 +28,11 @@ classdef c_lumericalFDTD < c_lumericalBase
             % call superclass constructor
             obj = obj@c_lumericalBase( varargin{:} );
 
-        end     % end c_lumericalMODE()
+        end     % end c_lumericalFDTD()
         
 
         function obj = appopen(obj)
-            % opens MODE app
+            % opens FDTD app
             obj.app_handle = appopen('fdtd');
         end
         

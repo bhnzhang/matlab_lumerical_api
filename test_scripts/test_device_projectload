@@ -1,0 +1,4 @@
+load("C:\Users\bz\Google Drive\research\popovic group\proposals\2018 supercables\device sims\moscap transient response\moscap_transient_response.ldev");
+
+save("hurhrhur.ldev");
+
