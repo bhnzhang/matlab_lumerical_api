@@ -371,7 +371,7 @@ classdef (Abstract) c_lumericalBase
             %       type: depends
             %       desc: the variable you asked for
             var = appgetvar( obj.app_handle, variable_name );
-        end
+        end     % end getvar()
         
         
         function [obj, lum_obj] = get_lum_obj_props( obj, lum_obj )
