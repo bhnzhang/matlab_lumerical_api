@@ -70,10 +70,7 @@ classdef (Abstract) c_lumericalBase
             
         end     % end contructor()
         
-        % ---------------------------
-        % File and app handling
-        % ---------------------------
-
+        
         function obj = open_lsf_file( obj, filemode )
             % open the lsf file
             %
@@ -176,51 +173,6 @@ classdef (Abstract) c_lumericalBase
         end     % end appclose()
         
         
-        function obj = addcomment(obj, comment)
-            % adds a comment to the lumerical script
-            %
-            % inputs:
-            %   comment
-            %       type: string
-            %       desc: comment to add
-            
-            obj = obj.write_command( sprintf('# %s', comment) );
-            
-        end     % end addcomment()
-        
-        
-        function obj = delete_all( obj )
-            % deletes all objects in the current group scope
-            obj = obj.write_command( 'deleteall;' );
-        end
-        
-        
-        function obj = switch_to_layout( obj )
-            % switches the solver to LAYOUT mode
-            obj = obj.write_command( 'switchtolayout;' );
-        end
-        
-        function obj = run(obj)
-            % run simulation
-            obj = obj.write_command('run;');
-        end
-        
-        function obj = save(obj, filename)
-            % save to project file
-            %
-            % Inputs:
-            %   filename
-            %       type: string
-            %       desc: name of file to save to (full path optional)
-            obj = obj.write_command( sprintf( 'save(''%s'');', filename ) );
-        end
-        
-        
-        % ---------------------------
-        % Setters/getters
-        % ---------------------------
-        
-        
         function obj = setprop(obj, prop_name, prop_val)
             % adds a set property command in lumerical
             %
@@ -303,7 +255,20 @@ classdef (Abstract) c_lumericalBase
             end
             
         end
-
+        
+        
+        function obj = addcomment(obj, comment)
+            % adds a comment to the lumerical script
+            %
+            % inputs:
+            %   comment
+            %       type: string
+            %       desc: comment to add
+            
+            obj = obj.write_command( sprintf('# %s', comment) );
+            
+        end     % end addcomment()
+        
         
         function obj = getresult( obj, monitor_name, dataset, variable_name )
             % Saves the result with name "dataset" of a monitor/analysis
@@ -459,20 +424,33 @@ classdef (Abstract) c_lumericalBase
         end
         
         
-        function obj = select( obj, lum_obj_name )
-            % Selects lumerical object
-            % Needed before setting or getting an object's property
-            % See: https://kb.lumerical.com/en/ref_scripts_select.html
+        function obj = delete_all( obj )
+            % deletes all objects in the current group scope
+            obj = obj.write_command( 'deleteall;' );
+        end
+        
+        
+        function obj = switch_to_layout( obj )
+            % switches the solver to LAYOUT mode
+            obj = obj.write_command( 'switchtolayout;' );
+        end
+        
+        function obj = run(obj)
+            % run simulation
+            obj = obj.write_command('run;');
+        end
+        
+        function obj = save(obj, filename)
+            % save to project file
             %
             % Inputs:
-            %   lum_obj_name
+            %   filename
             %       type: string
-            %       desc: name of lumerical object to select
-            
-            % select lumerical object
-            obj = obj.write_command( sprintf('select(''%s'');', lum_obj_name ) ); 
-            
-        end     % end select()
+            %       desc: name of file to save to (full path optional)
+            obj = obj.write_command( sprintf( 'save(''%s'');', filename ) );
+        end
+        
+        function obj = select( obj, 
         
         
         % ---------------------------
