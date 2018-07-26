@@ -475,6 +475,29 @@ classdef (Abstract) c_lumericalBase
         end     % end select()
         
         
+        function obj = get_var_field( obj, var_name, var_fieldname, var_to_save_to )
+            % Does 'var_to_save_to' = 'var_name'.'var_fieldname'
+            % For example:
+            %   Q = total_net_charge.Q;
+            % This is sometimes needed when trying to return a variable
+            % from lumerical to matlab, when the variable is a structure...
+            %
+            % Inputs:
+            %   var_name
+            %       type: string
+            %       desc: name of variable to grab field from
+            %   var_fieldname
+            %       type: string
+            %       desc: name of field to grab
+            %   var_to_save_to
+            %       type: string
+            %       desc: name of variable to save to
+            
+            obj = obj.write_command( sprintf('%s = %s.%s;', var_to_save_to, var_name, var_fieldname ) );
+            
+        end     % end get_var_field()
+        
+        
         % ---------------------------
         % Structure adding functions
         % ---------------------------
