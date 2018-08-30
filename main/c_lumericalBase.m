@@ -563,6 +563,30 @@ classdef (Abstract) c_lumericalBase
         end     % end addcircle()
         
         
+        function obj = addring(obj, varargin)
+            % adds a ring
+            %
+            % Inputs:
+            %   varargin
+            %       Name-value pairs of form 'property name', property value
+            %       See the primitives/c_tfsf.m class for valid properties
+            %
+            % Example:
+
+            
+            % add lumerical object
+            new_obj                 = c_ring( varargin{:} );
+            obj.lum_objects{end+1}  = new_obj;
+            
+            % add command
+            obj = obj.write_command( 'addring;' );
+            
+            % set properties
+            obj = obj.set_lum_object_properties( new_obj );
+            
+        end     % end addring()
+        
+        
         % ---------------------------
         % Simulation region functions
         % ---------------------------
