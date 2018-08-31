@@ -513,8 +513,7 @@ classdef (Abstract) c_lumericalBase
             %
             % Outputs:
             %   data
-            %       type: varies, but most likely a struct
-            %       desc: the data that the user asked for
+            %       typeL
             
             % first save object to temporary .mat file
             obj = obj.save_var_to_mat( 'temp_varfile.mat', var_name );
@@ -526,34 +525,10 @@ classdef (Abstract) c_lumericalBase
             % delete the temporary mat file
             delete temp_varfile.mat;
             
-        end     % end appgetvar_dataset()
+        end
             
         
-        function [ obj, data ] = get_data_from_monitor( obj, monitor_name, data_name )
-            % Grabs result data from a monitor
-            % I would say this is the preferential method to use.
-            %
-            % Inputs:
-            %   monitor_name
-            %       type: string
-            %       desc: name of monitor
-            %   data_name
-            %       type: string
-            %       desc: name
-            %
-            % Outputs:
-            %   data
-            %       type: varies, but most likely a struct
-            %       desc: the data that the user asked for
-            
-            % save result from monitor to a variable
-            var_name    = [ monitor_name '_' data_name ];
-            obj         = obj.getresult( monitor_name, data_name, var_name );
-            
-            % move data to matlab
-            [ obj, data ] = obj.appgetvar_dataset( var_name );
-            
-        end     % end get_data_from_monitor()
+        function obj = 
         
         
         % ---------------------------
