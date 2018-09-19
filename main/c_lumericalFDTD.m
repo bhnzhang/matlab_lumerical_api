@@ -181,7 +181,7 @@ classdef c_lumericalFDTD < c_lumericalBase
             %       desc: z coordinate array, optional (only needed for 3d
             %             simulations)
             
-            if nargin < 5
+            if nargin < 6
                 is_2d = true;
             else
                 is_2d = false;
@@ -257,10 +257,23 @@ classdef c_lumericalFDTD < c_lumericalBase
                 N = N(:);                                                   % now unwrap columns first
                 N = [ N; N ];                                               % double the length for z
                 
+                % separate real and imag
+                N_real = real(N).';
+                N_imag = imag(N).';
+                
+                % interleave into one array
+                N_interleaved = [ N_real; N_imag ];
+                N_interleaved = N_interleaved(:).';
+                
                 % write index
-                for ii = 1:length(N)
-                    fprintf( N_txt_fid, '%s\n', [ num2str( real(N(ii)) ) ' ' num2str( imag(N(ii)) ) ] );
-                end
+%                 N_str = sprintf( '%.3f %.3f\n', N_interleaved );
+                
+%                 N_str = sprintf('');
+%                 for ii = 1:length(N)
+%                     fprintf( N_txt_fid, '%s\n', [ num2str( real(N(ii)) ) ' ' num2str( imag(N(ii)) ) ] );
+% %                       N_str = sprintf( '%s%s\n', N_str, [ num2str( real(N(ii)) ) ' ' num2str( imag(N(ii)) ) ] );
+%                 end
+                fprintf( N_txt_fid, '%s', sprintf( '%.3f %.3f\n', N_interleaved ) );
                 
             end     % end if
             
