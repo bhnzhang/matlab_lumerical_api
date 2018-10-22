@@ -11,12 +11,12 @@ obj = c_lumericalFDTD(  'notes', 'psdlkfjsdlkfj', ...
 obj = obj.appopen();
                     
 % coordinates
-x = linspace( -2, 2, 10 );
-y = linspace( -3, 3, 10 );
+x = linspace( -2, 2, 2 );
+y = linspace( -3, 3, 2 );
 
 % index
-N                           = 1.5*ones( length(y), length(x) );
-N( y > -2 & y < 2, : )      = 1.6;
+N                   = 1.5*ones( length(y), length(x) );
+N( y > -2, : )      = 1.6;
 
 % % export index to txt
 % obj = obj.write_index_to_txt( N, x, y );
@@ -35,4 +35,8 @@ units   = 'microns';
 obj     = obj.import_index_to_lumerical( N, units, x, y );
 
 % execute commands
+obj = obj.execute_commands();   
+
+% import object to lumerical
+obj = obj.importnk( [ pwd filesep 'N.txt' ], units, 0, 0, 0, 0 );
 obj = obj.execute_commands();   

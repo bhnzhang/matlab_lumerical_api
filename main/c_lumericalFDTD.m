@@ -198,7 +198,7 @@ classdef c_lumericalFDTD < c_lumericalBase
             end
             
             % import object to lumerical
-            obj = obj.importnk( filename, units, 0, 0, 0, 0 );
+            obj = obj.importnk( [ pwd filesep filename ], units, 0, 0, 0, 0 );
             
         end
         
