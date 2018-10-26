@@ -242,6 +242,7 @@ classdef (Abstract) c_lumericalBase
                 % property value is a string
                 obj = obj.write_command( sprintf('set(''%s'', ''%s'');', prop_name, prop_val ) ); 
             else
+                % property value is numeric
                 obj = obj.write_command( [ 'set(''' prop_name ''', ' num2str(prop_val), ');' ] ); 
             end
 
