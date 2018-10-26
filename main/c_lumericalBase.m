@@ -243,7 +243,7 @@ classdef (Abstract) c_lumericalBase
                 obj = obj.write_command( sprintf('set(''%s'', ''%s'');', prop_name, prop_val ) ); 
             else
                 % property value is numeric
-                obj = obj.write_command( [ 'set(''' prop_name ''', ' vec2str(prop_val, 10), ');' ] ); 
+                obj = obj.write_command( [ 'set(''' prop_name ''', ' mat2str(prop_val, 10), ');' ] ); 
             end
 
         end
