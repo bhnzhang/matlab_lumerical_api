@@ -518,14 +518,14 @@ classdef (Abstract) c_lumericalBase
             %       desc: the data that the user asked for
             
             % first save object to temporary .mat file
-            obj = obj.save_var_to_mat( 'temp_varfile.mat', var_name );
+            obj = obj.save_var_to_mat( [pwd filesep 'temp_varfile.mat'], var_name );
             obj = obj.execute_commands();
             
             % load .mat file
-            data = load( 'temp_varfile.mat' );
+            data = load( [ pwd filesep 'temp_varfile.mat' ] );
             
             % delete the temporary mat file
-            delete temp_varfile.mat;
+            delete( [pwd filesep 'temp_varfile.mat']);
             
         end     % end appgetvar_dataset()
             
