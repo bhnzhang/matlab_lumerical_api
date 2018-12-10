@@ -413,8 +413,6 @@ classdef (Abstract) c_lumericalBase
         function [obj, lum_obj] = get_lum_obj_props( obj, lum_obj_name )
             % get all the properties of the requested lumerical object
             %
-            % This function does not require execute_commands();
-            %
             % Inputs:
             %   lum_obj
             %       type: lumerical base object
@@ -422,35 +420,31 @@ classdef (Abstract) c_lumericalBase
             %       properties from
             
             % search for and select object
-            lum_obj_indx = 0;
             for ii = 1:length( obj.lum_objects )
                 if strcmp( obj.lum_objects{ii}.name, lum_obj_name )
-                    lum_obj_indx = ii;
-                    break;
-                end       
+                    lum_obj
+                
+                
             end
-
-            % select the lumerical object
-            appevalscript( obj.app_handle, sprintf( 'select(''%s'');', obj.lum_objects{lum_obj_indx}.name ) );
+            % WARNING: this might be buggy, since I have not forced the
+            % user to include a name for the object
+            appevalscript( obj.app_handle, sprintf( 'select(''%s'');', lum_obj.name ) );
             
-            for ii = 1:length( obj.lum_objects{lum_obj_indx}.valid_props )
+            for ii = 1:length( lum_obj.valid_props )
                 % for each property name
                 
                 % save property to an internal lumerical var "temp"
-                appevalscript( obj.app_handle, sprintf( 'temp = get(''%s'');', obj.lum_objects{lum_obj_indx}.valid_props{ii} ) );
+                appevalscript( obj.app_handle, sprintf( 'temp = get(''%s'');', lum_obj.valid_props{ii} ) );
                 
                 % return that property value to matlab
                 [obj, prop_val] = obj.getvar( 'temp' );
                 
                 % assign that property value to the object
-                prop_name                   = strrep( obj.lum_objects{lum_obj_indx}.valid_props{ii}, ' ', '_' );              % replace whitespace w/ underscores
+                prop_name                   = strrep( lum_obj.valid_props{ii}, ' ', '_' );              % replace whitespace w/ underscores
                 prop_name                   = strrep( prop_name, '-', '_' );                            % replace dashes w/ underscores
-                obj.lum_objects{lum_obj_indx}.props.(prop_name)   = prop_val;
+                lum_obj.props.(prop_name)   = prop_val;
                 
             end
-            
-            % save the updated object
-            lum_obj = obj.lum_objects{lum_obj_indx};
             
         end
         

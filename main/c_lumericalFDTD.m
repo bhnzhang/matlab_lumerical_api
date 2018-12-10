@@ -128,7 +128,7 @@ classdef c_lumericalFDTD < c_lumericalBase
             % Inputs:
             %   varargin
             %       Name-value pairs of form 'property name', property value
-            %       See the primitives/c_indexmonitor.m class for valid properties
+            %       See the primitives/c_field_and_power_monitor.m class for valid properties
             %
             % Example:
             
@@ -142,7 +142,41 @@ classdef c_lumericalFDTD < c_lumericalBase
             % set properties
             obj = obj.set_lum_object_properties( new_obj );
             
-        end     % end addindex()
+        end     % end addpower()
+        
+        function obj = addmodeexpansion(obj, varargin)
+            % adds a mode expansion monitor to the simulation
+            % see: https://kb.lumerical.com/en/ref_scripts_addmodeexpansion.html
+            %
+            % Inputs:
+            %   varargin
+            %       Name-value pairs of form 'property name', property value
+            %       See the primitives/c_mode_expansion_monitor.m class for valid properties
+            %
+            % Example:
+            % obj = obj.addmodeexpansion( ...
+            %             'monitor type', '2D X-normal', ...
+            %             'x',            output_wg_lum_obj.props.x + 5*dxy, ...
+            %             'y min',        0, ...
+            %             'y max',        domain_size_y, ...
+            %             'z min',        0, ...
+            %             'z max',        domain_size_z, ...
+            %             'mode selection', 'fundamental mode', ...
+            %             'override global monitor settings', true, ...
+            %             'use source limts', true );
+            % obj = obj.execute_commands();
+            
+            % add lumerical object
+            new_obj                 = c_mode_expansion_monitor( varargin{:} );
+            obj.lum_objects{end+1}  = new_obj;
+            
+            % lumerical command
+            obj = obj.write_command( 'addmodeexpansion;' ); 
+            
+            % set properties
+            obj = obj.set_lum_object_properties( new_obj );
+            
+        end     % end addmodeexpansion()
         
         % ---------------------------
         % Misc. functions
