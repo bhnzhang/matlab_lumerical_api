@@ -183,22 +183,25 @@ classdef c_lumericalFDTD < c_lumericalBase
             % see: https://kb.lumerical.com/en/ref_scripts_addmodeexpansion.html
             %      https://kb.lumerical.com/en/ref_scripts_setexpansion.html
             %
-            % Requires that the mode expansion monitor is already selected
-            %
             % Inputs:
             %   name
             %       type: string
-            %       desc: name that the mode expansion monitor uses, can be
-            %             any thing
+            %       desc:
             %   monitor_name
-            %       type: string
-            %       desc: name of DFT monitor to add. must exist in the
-            %             lumerical model workspace
+            %       type:
+            %       desc:
             %
             % Example:
             
+            % add lumerical object
+            new_obj                 = c_mode_expansion_monitor( varargin{:} );
+            obj.lum_objects{end+1}  = new_obj;
+            
             % lumerical command
-            obj = obj.write_command( sprintf( 'setexpansion("%s", "%s");', name, monitor_name ) ); 
+            obj = obj.write_command( 'addmodeexpansion;' ); 
+            
+            % set properties
+            obj = obj.set_lum_object_properties( new_obj );
             
         end     % end setexpansion()
         

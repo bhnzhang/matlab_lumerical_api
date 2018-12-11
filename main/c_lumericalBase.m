@@ -790,8 +790,7 @@ classdef (Abstract) c_lumericalBase
             %   var_name
             %       type: string
             %       desc: name of lumerical workspace variable to save
-            
-            
+ 
             % lumerical command
             obj = obj.write_command( sprintf( 'matlabsave("%s", %s);', mat_filename, var_name ) );
             
