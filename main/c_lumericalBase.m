@@ -162,7 +162,13 @@ classdef (Abstract) c_lumericalBase
             obj.all_text = sprintf( '%s%s', obj.all_text, obj.text_buffer );
             
             % run commands
-            appevalscript( obj.app_handle, obj.text_buffer );
+            try
+                appevalscript( obj.app_handle, obj.text_buffer );
+            catch err_msg
+                % clear text buffer and then throw error
+                obj.text_buffer = '';
+                throw(err_msg);
+            end
             
             % clear text buffer
             obj.text_buffer = '';
@@ -547,8 +553,11 @@ classdef (Abstract) c_lumericalBase
             %       type: varies, but most likely a struct
             %       desc: the data that the user asked for
             
+%             monitor_name    = [ '"' monitor_name '"' ];
+%             data_name       = [ '"' data_name '"' ];
+            
             % save result from monitor to a variable
-            var_name    = [ monitor_name '_' data_name ];
+            var_name    = strrep( [ monitor_name '_' data_name ], ' ', '_' );   % gotta replace whitespaces with underscores
             obj         = obj.getresult( monitor_name, data_name, var_name );
             
             % move data to matlab
