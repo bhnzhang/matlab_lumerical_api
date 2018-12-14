@@ -165,6 +165,10 @@ classdef (Abstract) c_lumericalBase
             try
                 appevalscript( obj.app_handle, obj.text_buffer );
             catch err_msg
+                
+                % if error, output the commmands that threw the 
+                fprintf( 'Error in evaluating Lumerical script. The code which threw the error is:\n%s\n', obj.text_buffer );
+                
                 % clear text buffer and then throw error
                 obj.text_buffer = '';
                 throw(err_msg);
