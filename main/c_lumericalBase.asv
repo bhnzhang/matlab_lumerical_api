@@ -162,13 +162,7 @@ classdef (Abstract) c_lumericalBase
             obj.all_text = sprintf( '%s%s', obj.all_text, obj.text_buffer );
             
             % run commands
-            try
-                appevalscript( obj.app_handle, obj.text_buffer );
-            catch err_msg
-                % clear text buffer and then throw error
-                obj.text_buffer = '';
-                throw(err_msg);
-            end
+            appevalscript( obj.app_handle, obj.text_buffer );
             
             % clear text buffer
             obj.text_buffer = '';
@@ -419,8 +413,6 @@ classdef (Abstract) c_lumericalBase
         function [obj, lum_obj] = get_lum_obj_props( obj, lum_obj_name )
             % get all the properties of the requested lumerical object
             %
-            % This function does not require execute_commands();
-            %
             % Inputs:
             %   lum_obj
             %       type: lumerical base object
@@ -428,35 +420,31 @@ classdef (Abstract) c_lumericalBase
             %       properties from
             
             % search for and select object
-            lum_obj_indx = 0;
             for ii = 1:length( obj.lum_objects )
                 if strcmp( obj.lum_objects{ii}.name, lum_obj_name )
-                    lum_obj_indx = ii;
-                    break;
-                end       
+                    lum_obj
+                
+                
             end
-
-            % select the lumerical object
-            appevalscript( obj.app_handle, sprintf( 'select(''%s'');', obj.lum_objects{lum_obj_indx}.name ) );
+            % WARNING: this might be buggy, since I have not forced the
+            % user to include a name for the object
+            appevalscript( obj.app_handle, sprintf( 'select(''%s'');', lum_obj.name ) );
             
-            for ii = 1:length( obj.lum_objects{lum_obj_indx}.valid_props )
+            for ii = 1:length( lum_obj.valid_props )
                 % for each property name
                 
                 % save property to an internal lumerical var "temp"
-                appevalscript( obj.app_handle, sprintf( 'temp = get(''%s'');', obj.lum_objects{lum_obj_indx}.valid_props{ii} ) );
+                appevalscript( obj.app_handle, sprintf( 'temp = get(''%s'');', lum_obj.valid_props{ii} ) );
                 
                 % return that property value to matlab
                 [obj, prop_val] = obj.getvar( 'temp' );
                 
                 % assign that property value to the object
-                prop_name                   = strrep( obj.lum_objects{lum_obj_indx}.valid_props{ii}, ' ', '_' );              % replace whitespace w/ underscores
+                prop_name                   = strrep( lum_obj.valid_props{ii}, ' ', '_' );              % replace whitespace w/ underscores
                 prop_name                   = strrep( prop_name, '-', '_' );                            % replace dashes w/ underscores
-                obj.lum_objects{lum_obj_indx}.props.(prop_name)   = prop_val;
+                lum_obj.props.(prop_name)   = prop_val;
                 
             end
-            
-            % save the updated object
-            lum_obj = obj.lum_objects{lum_obj_indx};
             
         end
         
@@ -565,11 +553,8 @@ classdef (Abstract) c_lumericalBase
             %       type: varies, but most likely a struct
             %       desc: the data that the user asked for
             
-%             monitor_name    = [ '"' monitor_name '"' ];
-%             data_name       = [ '"' data_name '"' ];
-            
             % save result from monitor to a variable
-            var_name    = strrep( [ monitor_name '_' data_name ], ' ', '_' );   % gotta replace whitespaces with underscores
+            var_name    = [ monitor_name '_' data_name ];
             obj         = obj.getresult( monitor_name, data_name, var_name );
             
             % move data to matlab
@@ -799,7 +784,8 @@ classdef (Abstract) c_lumericalBase
             %   var_name
             %       type: string
             %       desc: name of lumerical workspace variable to save
- 
+            
+            
             % lumerical command
             obj = obj.write_command( sprintf( 'matlabsave("%s", %s);', mat_filename, var_name ) );
             
