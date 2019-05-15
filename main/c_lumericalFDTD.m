@@ -116,6 +116,31 @@ classdef c_lumericalFDTD < c_lumericalBase
             obj = obj.set_lum_object_properties( new_obj );
             
         end     % end addmode()
+        
+        
+        function obj = addgaussian(obj, varargin)
+            % adds a gaussian source
+            % see: https://kb.lumerical.com/ref_scripts_addgaussian.html
+            %
+            % Inputs:
+            %   varargin
+            %       Name-value pairs of form 'property name', property value
+            %       See the primitives/c_modesource.m class for valid properties
+            %
+            % Example:
+
+            
+            % add lumerical object
+            new_obj                 = c_gaussiansource( varargin{:} );
+            obj.lum_objects{end+1}  = new_obj;
+            
+            % add command
+            obj = obj.write_command( 'addgaussian;' );
+            
+            % set properties
+            obj = obj.set_lum_object_properties( new_obj );
+            
+        end     % end addgaussian()
 
         % ---------------------------
         % Monitor functions
