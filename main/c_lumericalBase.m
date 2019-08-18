@@ -695,6 +695,30 @@ classdef (Abstract) c_lumericalBase
             
         end     % end addpoly()
         
+        function obj = addtriangle(obj, varargin)
+            % adds a triangle object to the script/lumerical program
+            %
+            % Inputs:
+            %   varargin
+            %       Name-value pairs of form 'property name', property value
+            %       See the primitives/c_triangle.m class for valid properties
+            %
+            % Example:
+            % TODO
+            
+            % add lumerical object
+            new_obj                = c_triangle( varargin{:} );
+            obj.lum_objects{end+1} = new_obj;
+            
+            % lumerical command
+            obj = obj.write_command( 'addtriangle;' ); 
+            
+            % set properties
+            obj = obj.set_lum_object_properties( new_obj );
+            
+            
+        end     % end addpoly()
+        
         
         % ---------------------------
         % Simulation region functions
