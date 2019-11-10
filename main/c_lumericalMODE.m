@@ -69,6 +69,31 @@ classdef c_lumericalMODE < c_lumericalBase
         end     % end addFDE()
         
         
+        function obj = addEME(obj, varargin)
+            % adds an EME (eigenmode expansion) solver to the
+            % lumerical model
+            %
+            % Inputs:
+            %   varargin
+            %       Name-value pairs of form 'property name', property value
+            %       See the primitives/c_EME.m class for valid properties
+            %
+            % Example:
+
+            
+            % add lumerical object
+            new_obj                 = c_EME( varargin{:} );
+            obj.lum_objects{end+1}  = new_obj;
+            
+            % add eme
+            obj = obj.write_command( 'addeme;' );
+            
+            % set eme properties
+            obj = obj.set_lum_object_properties( new_obj );
+            
+        end     % end addEME()
+        
+        
         function obj = findmodes(obj)
             % finds modes
             % to set the inputs, set them with the FDE object before
