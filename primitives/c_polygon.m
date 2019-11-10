@@ -4,7 +4,7 @@ classdef c_polygon < c_lumBaseObject
 % author: bohan
 %
 % List of properties of the lumerical object
-% returned when called ?set; on a rectangle object:
+% returned when called ?set; on a polygon object:
 % alpha
 % color opacity
 % detail
