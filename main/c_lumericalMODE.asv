@@ -126,15 +126,7 @@ classdef c_lumericalMODE < c_lumericalBase
 
         
         function obj = setEMEAnalysis(obj, varargin)
-            % Sets properties of eme analysis window
-            %
-            % Inputs:
-            %   varargin
-            %       Name-value pairs of form 'property name', property value
-            %       See the primitives/c_EMEAnalysis.m class for valid properties
-            %
-            % Example:
-            
+            % Sets properties of eme analysis
             
             
         end
