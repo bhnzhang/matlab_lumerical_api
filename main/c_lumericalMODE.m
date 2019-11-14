@@ -100,6 +100,29 @@ classdef c_lumericalMODE < c_lumericalBase
             % calling the modesolver
             obj = obj.write_command( 'findmodes;' );
         end
+        
+        
+        function obj = setEMEPort(obj, port_number, varargin)
+            % modifies EME port settings, assumes that EME simulation
+            % region has already been created
+            %
+            % Inputs:
+            %   port_number
+            %       type: int, scalar
+            %       desc: either 1 or 2
+            %   varargin
+            %       Name-value pairs of form 'property name', property value
+            %       See the primitives/c_EMEPort.m class for valid properties
+            %
+            % Example:
+            
+            % select the port
+            obj = obj.write_command( sprintf('select("EME::Ports::port_%i");', port_number) );
+            
+            % set properties
+            obj = obj.set_lum_object_properties( c_EMEPort( varargin{:} ) );
+            
+        end     % end setEMEPort()
 
         
     end     % end methods
