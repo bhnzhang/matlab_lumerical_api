@@ -1,30 +1,24 @@
-classdef c_EMEPort < c_lumBaseObject
-% Lumerical port object of EME simulation object
+classdef c_EMEMonitor < c_lumBaseObject
+% Lumerical EME Monitor object
 % 
 % author: bohan
 %
 % List of properties of the lumerical object
-% returned when called ?set; on an EME port object:
-% auto update before analysis
+% returned when called ?set; on an EME monitor object:
 % down sample X
 % down sample Y
 % down sample Z
 % enabled
-% mode selection
 % monitor type
 % name
-% offset
-% phi
-% port location
 % record data in pml
 % spatial interpolation
-% theta
 % type
-% use full simulation span
 % use relative coordinates
 % x
 % x max
 % x min
+% x resolution
 % x span
 % y
 % y max
@@ -45,7 +39,7 @@ classdef c_EMEPort < c_lumBaseObject
     
     methods
         
-        function obj = c_EMEPort( varargin )
+        function obj = c_EMEMonitor( varargin )
             % constructor
             %
             % inputs:
@@ -54,26 +48,20 @@ classdef c_EMEPort < c_lumBaseObject
             
             % valid property names
             valid_props =   {
-                            'auto update before analysis', ...
                             'down sample X', ...
                             'down sample Y', ...
                             'down sample Z', ...
                             'enabled', ...
-                            'mode selection', ...
                             'monitor type', ...
                             'name', ...
-                            'offset', ...
-                            'phi', ...
-                            'port location', ...
                             'record data in pml', ...
                             'spatial interpolation', ...
-                            'theta', ...
                             'type', ...
-                            'use full simulation span', ...
                             'use relative coordinates', ...
                             'x', ...
                             'x max', ...
                             'x min', ...
+                            'x resolution', ...
                             'x span', ...
                             'y', ...
                             'y max', ...
@@ -87,7 +75,7 @@ classdef c_EMEPort < c_lumBaseObject
             
             obj = obj@c_lumBaseObject( valid_props, varargin{:} );
                         
-            obj.model_type = 'EMEPort';
+            obj.model_type = 'EMEProfileMonitor';
             
         end     % end constructor()
         

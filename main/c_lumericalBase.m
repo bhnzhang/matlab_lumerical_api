@@ -801,6 +801,7 @@ classdef (Abstract) c_lumericalBase
         
         function obj = save_project( obj, filename )
             % Saves lumerical project file
+            % Same as the "save" function
             %
             % Inputs:
             %   filename

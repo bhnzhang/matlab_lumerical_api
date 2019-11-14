@@ -94,30 +94,6 @@ classdef c_lumericalMODE < c_lumericalBase
         end     % end addEME()
         
         
-        function obj = addEMEMonitor(obj, varargin)
-            % adds an EME profile monitor to the
-            % lumerical model
-            %
-            % Inputs:
-            %   varargin
-            %       Name-value pairs of form 'property name', property value
-            %       See the primitives/c_EMEMonitor.m class for valid properties
-            %
-            % Example:
-
-            % add lumerical object
-            new_obj                 = c_EMEMonitor( varargin{:} );
-            obj.lum_objects{end+1}  = new_obj;
-            
-            % add eme monitor
-            obj = obj.write_command( 'addemeprofile;' );
-            
-            % set properties
-            obj = obj.set_lum_object_properties( new_obj );
-            
-        end     % end addEMEMonitor()
-        
-        
         function obj = findmodes(obj)
             % finds modes
             % to set the inputs, set them with the FDE object before
@@ -140,66 +116,19 @@ classdef c_lumericalMODE < c_lumericalBase
             %
             % Example:
             
-            % select the port
-            obj = obj.write_command( sprintf('select("EME::Ports::port_%i");', port_number) );
+            % first select the port
+            obj = obj.write_command( sprintf( "select('EME::Ports::port_%i');", port_number) );
             
-            % set properties
+            % set port properties
             obj = obj.set_lum_object_properties( c_EMEPort( varargin{:} ) );
             
-        end     % end setEMEPort()
+        end     % end function setEMEPort()
 
         
-        function obj = set_eme_analysis(obj, varargin)
-            % Sets properties of eme analysis window
-            %
-            % Inputs:
-            %   varargin
-            %       Name-value pairs of form 'property name', property value
-            %       See the primitives/c_EMEAnalysis.m class for valid properties
-            %
-            % Example:
+        function obj = setEMEAnalysis(obj, varargin)
+            % Sets properties of eme analysis
             
-            for ii = 1:2:length(varargin)-1
-                % set properties
-                prop_name   = varargin{ii};
-                prop_val    = varargin{ii+1};
-                
-                if ischar(prop_val)
-                    % property value is a string
-                    obj = obj.write_command( sprintf('setemeanalysis(''%s'', ''%s'');', prop_name, prop_val ) ); 
-                else
-                    % property value is numeric
-                    obj = obj.write_command( [ 'setemeanalysis(''' prop_name ''', ' regexprep( mat2str(prop_val, 10), {'\s+'}, {','} ) ');' ] ); 
-                end
-                
-            end     % end for varargin
             
-        end     % end set_eme_analysis()
-        
-        
-        function [obj, val] = get_eme_analysis(obj, property)
-            % Queries and returns values of requested property from eme
-            % analysis window
-            %
-            % Inputs:
-            %   property
-            %       type: str
-            %       desc: name of property to get
-            %
-            % Example:
-            
-            obj = obj.write_command( sprintf('tempvar = getemeanalysis("%s");', property) );
-            obj = obj.execute_commands();
-            
-            [obj,val] = obj.getvar( 'tempvar' );
-            
-        end
-        
-        
-        function obj = eme_propagate(obj)
-            % tells eme to propagate
-            obj = obj.write_command('emepropagate;');
-            obj = obj.execute_commands();
         end
         
         
