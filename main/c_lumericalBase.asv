@@ -253,7 +253,7 @@ classdef (Abstract) c_lumericalBase
                 obj = obj.write_command( sprintf('set(''%s'', ''%s'');', prop_name, prop_val ) ); 
             else
                 % property value is numeric
-                obj = obj.write_command( [ 'set(''' prop_name ''', ' format_numeric_for_lm(prop_val) ');' ] ); 
+                obj = obj.write_command( [ 'set(''' prop_name ''', ' regexprep( mat2str(prop_val, 10), {'\s+'}, {','} ) ');' ] ); 
             end
 
         end
@@ -750,15 +750,10 @@ classdef (Abstract) c_lumericalBase
         
         function obj = copy(obj, dx, dy, dz)
             % makes a copy of an object, translated by dx, dy, dz
-            obj = obj.write_command( [ 'copy(' format_numeric_for_lm(dx) ',' ...
-                                                format_numeric_for_lm(dy) ',' ...
-                                                format_numeric_for_lm(dz) ');'] );
+            obj = obj.write_command( sprintf('copy(%f,%f,%f);', dx, dy, dz) );
+            
         end     % end copy()
         
-        function obj = addtogroup(obj, groupname)
-            % adds currently selected object to the group "groupname"
-            obj = obj.write_command( sprintf('addtogroup("%s");', groupname) );
-        end
         
         % ---------------------------
         % Simulation region functions
@@ -874,7 +869,10 @@ classdef (Abstract) c_lumericalBase
             
         end     % end save_var_to_mat()
         
-       
+        % etc. helper functions
+        function obj = format_numeric_for_
+        regexprep( mat2str(prop_val, 10), {'\s+'}, {','} )
+        
     end     % end methods
     
     
@@ -962,9 +960,7 @@ parsed_inputs = p;
 
 end     % end parse varrgin
 
-function returnval = format_numeric_for_lm(val)
-    returnval = regexprep( mat2str(val, 10), {'\s+'}, {','} );
-end
+
 
 
 
