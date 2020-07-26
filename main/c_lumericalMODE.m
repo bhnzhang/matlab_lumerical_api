@@ -140,13 +140,13 @@ classdef c_lumericalMODE < c_lumericalBase
             %
             % Example:
             
-            % first select the port
-            obj = obj.write_command( sprintf( "select('EME::Ports::port_%i');", port_number) );
+            % select the port
+            obj = obj.write_command( sprintf('select("EME::Ports::port_%i");', port_number) );
             
-            % set port properties
+            % set properties
             obj = obj.set_lum_object_properties( c_EMEPort( varargin{:} ) );
             
-        end     % end function setEMEPort()
+        end     % end setEMEPort()
 
         
         function obj = set_eme_analysis(obj, varargin)

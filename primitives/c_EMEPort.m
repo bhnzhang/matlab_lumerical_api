@@ -1,5 +1,5 @@
 classdef c_EMEPort < c_lumBaseObject
-% Lumerical EME Port object
+% Lumerical port object of EME simulation object
 % 
 % author: bohan
 %
