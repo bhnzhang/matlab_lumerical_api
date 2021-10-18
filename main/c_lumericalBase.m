@@ -41,7 +41,7 @@ classdef (Abstract) c_lumericalBase
             fname           = mfilename;                        % name of class
             fpath           = mfilename('fullpath');            % full path, including fname
             projectpath     = erase( fpath, [ 'main' filesep fname] );           % now only holds path to project's code
-            addpath([ projectpath 'primitives' ]);
+            addpath(genpath([ projectpath 'primitives' ]));
             
             % inputs and defaults
             inputs = {  'notes',            'none' ...
@@ -224,7 +224,6 @@ classdef (Abstract) c_lumericalBase
             %       desc: name of file to save to (full path optional)
             obj = obj.write_command( sprintf( 'save(''%s'');', filename ) );
         end
-        
         
         % ---------------------------
         % Setters/getters
@@ -580,6 +579,20 @@ classdef (Abstract) c_lumericalBase
             [ obj, data ] = obj.appgetvar_dataset( var_name );
             
         end     % end get_data_from_monitor()
+        
+        function [obj] = delete( obj, obj_name )
+            % selects and deletes an object by name
+            %
+            % Inputs:
+            %   obj_name
+            %       type: string
+            %       desc: name of object to delete
+            
+            % lumerical command
+            obj = obj.write_command( sprintf( 'select("%s");', obj_name ) ); 
+            obj = obj.write_command( 'delete;' ); 
+            
+        end
         
         
         % ---------------------------

@@ -141,6 +141,30 @@ classdef c_lumericalFDTD < c_lumericalBase
             obj = obj.set_lum_object_properties( new_obj );
             
         end     % end addgaussian()
+        
+        function obj = adddipole(obj, varargin)
+            % adds a dipole source
+            % see: https://support.lumerical.com/hc/en-us/articles/360034924393-adddipole-Script-command
+            %
+            % Inputs:
+            %   varargin
+            %       Name-value pairs of form 'property name', property value
+            %       See the primitives/sources/c_dipolesource.m class for valid properties
+            %
+            % Example:
+
+            
+            % add lumerical object
+            new_obj                 = c_dipolesource( varargin{:} );
+            obj.lum_objects{end+1}  = new_obj;
+            
+            % add command
+            obj = obj.write_command( 'adddipole;' );
+            
+            % set properties
+            obj = obj.set_lum_object_properties( new_obj );
+            
+        end     % end addgaussian()
 
         % ---------------------------
         % Monitor functions
