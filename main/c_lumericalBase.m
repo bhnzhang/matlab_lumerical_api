@@ -754,8 +754,40 @@ classdef (Abstract) c_lumericalBase
             % set properties
             obj = obj.set_lum_object_properties( new_obj );
             
-            
         end     % end addtriangle()
+
+        function obj = gdsimport(obj, filename, cellname, layer, material, zmin, zmax)
+            % imports a gds file into lumerical
+            %
+            % inputs:
+            %   filename
+            %       type: string
+            %       desc: gds filename
+            %   cellname
+            %       type: string
+            %       desc: name of cell to import
+            %   layer
+            %       type: string
+            %       desc: "<layer>:<data type>". For example: "6:2"
+            %   material
+            %       type: string
+            %       desc: material name, for example "Ag (Silver) - CRC"
+            %   zmin
+            %       type: double, scalar
+            %       desc: minimum z value for extrusion to 3D. units meters
+            %   zmax
+            %       type: double, scalar
+            %       desc: maximum z value for extrusion to 3D. units meters
+            % 
+            % see
+            % https://optics.ansys.com/hc/en-us/articles/360034406974-gdsimport
+            % for extended documentation
+
+            % lumerical command
+            obj = obj.write_command( sprintf('gdsimport("%s", "%s", "%s", "%s", %e, %e);', ...
+                filename, cellname, layer, material, zmin, zmax) ); 
+
+        end
         
         % ---------------------------
         % Structure manipulation functions
