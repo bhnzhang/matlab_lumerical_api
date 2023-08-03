@@ -761,8 +761,6 @@ classdef (Abstract) c_lumericalBase
             % see
             % https://optics.ansys.com/hc/en-us/articles/360034930013-addmaterial-Script-command
             % for more
-            % currently only supports basic isotropic non dispersive
-            % materials
             %
             % Args:
             %   materialtype
@@ -779,22 +777,22 @@ classdef (Abstract) c_lumericalBase
             obj = obj.write_command( sprintf('mymat = addmaterial("%s");', materialtype) ); 
 
             % set properties
-            obj = obj.write_command( sprintf('setmaterial(mymat,"name","%s");', matname) ); 
+            setmaterial(mymaterial,"name","Aluminum");
+setmaterial("Aluminum", "Anisotropy", 1); # enable diagonal anisotropy
+setmaterial("Aluminum","Permittivity", A);
+setmaterial("Aluminum","Conductivity", B);
+            obj = obj.write_command( sprintf('setmaterial(mymat,"name","%s")', matname) ); 
 
             props_to_set = fieldnames( matprops );
             for ii = 1:length(props_to_set)
                 % set properties
-                prop_name = strrep(props_to_set{ii}, '_', ' ');
-                prop_val = matprops.(props_to_set{ii});
+                prop_val    = matprops.(props_to_set{ii});
                 if ischar(prop_val)
                     % property value is a string
-                    obj = obj.write_command( sprintf('setmaterial("%s","%s","%s");', matname, prop_name, prop_val ) ); 
+                    obj = obj.write_command( sprintf('setmaterial(''%s'', ''%s'');', prop_name, prop_val ) ); 
                 else
                     % property value is numeric
-%                     s = [ 'setmaterial("' matname '","' prop_name '", ' format_numeric_for_lm(prop_val) ');' ];
-%                     obj = obj.write_command( [ 'setmaterial("' matname '","' prop_name '", ' format_numeric_for_lm(prop_val) ');' ] ); 
-                    obj = obj.write_command( sprintf('setmaterial("%s","%s",%s);', matname, prop_name, format_numeric_for_lm(prop_val) ) ); 
-                    
+                    obj = obj.write_command( [ 'setmaterial(''' prop_name ''', ' format_numeric_for_lm(prop_val) ');' ] ); 
                 end
             end
 

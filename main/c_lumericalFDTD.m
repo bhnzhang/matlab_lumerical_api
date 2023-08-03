@@ -250,6 +250,29 @@ classdef c_lumericalFDTD < c_lumericalBase
             obj = obj.write_command( sprintf( 'setexpansion("%s", "%s");', name, monitor_name ) ); 
             
         end     % end setexpansion()
+
+        function obj = addtime(obj, varargin)
+            % adds a time monitor to the simulation
+            % see https://optics.ansys.com/hc/en-us/articles/360034404494-addtime
+            %
+            % Inputs:
+            %   varargin
+            %       Name-value pairs of form 'property name', property value
+            %       See the primitives/c_timemonitor.m class for valid properties
+            %
+            % Example:
+            
+            % add lumerical object
+            new_obj                 = c_timemonitor( varargin{:} );
+            obj.lum_objects{end+1}  = new_obj;
+            
+            % lumerical command
+            obj = obj.write_command( 'addtime;' ); 
+            
+            % set properties
+            obj = obj.set_lum_object_properties( new_obj );
+            
+        end     % end addtime()
         
         % ---------------------------
         % Misc. functions
