@@ -65,7 +65,64 @@ classdef c_lumericalFDTD < c_lumericalBase
         % Structure functions
         % ---------------------------
 
-        
+        function obj = addlayerbuilder(obj, varargin)
+            % adds layer builder object
+
+            % add lumerical object
+            new_layerbuilder = c_layerbuilder( varargin{:} );
+            obj.lum_objects{end+1}  = new_layerbuilder;
+
+            obj = obj.write_command( 'addlayerbuilder;' );
+
+            % set properties
+            obj = obj.set_lum_object_properties( new_layerbuilder );
+        end
+
+        function obj = loadgdsfile(obj, gdsfilename)
+            % loads a gds file into a layer builder object
+            obj = obj.write_command( sprintf('loadgdsfile("%s");', gdsfilename) );
+        end
+
+        function obj = addlayer(obj, name, varargin)
+            % add layer to layer builder and sets layer properties
+            %
+            % args
+            %   name
+            %   varargin : name value pairs for layer properties to set
+            %       see primitive for list of properties
+            obj = obj.write_command( sprintf('addlayer("%s");', name) );
+
+            % add layer object to parse the args
+            new_layer = c_layer( varargin{:} );
+            obj.lum_objects{end+1} = new_layer;
+
+            % set properties
+            props_to_set = fieldnames( new_layer.props );
+            for ii = 1:length(props_to_set)
+                obj = obj.setlayer(name, strrep(props_to_set{ii}, '_', ' '), new_layer.props.(props_to_set{ii}));
+            end
+        end
+
+        function obj = setlayer(obj, layer_name, prop_name, prop_val)
+            % set layer property
+            %
+            % args:
+            %   prop_name
+            %       type: string
+            %       desc: name of property to set
+            %   prop_val
+            %       type: string or value
+            %       desc: value of the property to set
+
+            if ischar(prop_val)
+                % property value is a string
+                obj = obj.write_command( sprintf('setlayer(''%s'',''%s'',''%s'');', layer_name, prop_name, prop_val ) ); 
+            else
+                % property value is numeric
+                obj = obj.write_command( [ 'setlayer(''' layer_name ''',''' prop_name ''',' obj.format_numeric_for_lm(prop_val) ');' ] ); 
+            end
+        end
+
         % ---------------------------
         % Source functions
         % ---------------------------

@@ -252,7 +252,7 @@ classdef (Abstract) c_lumericalBase
                 obj = obj.write_command( sprintf('set(''%s'', ''%s'');', prop_name, prop_val ) ); 
             else
                 % property value is numeric
-                obj = obj.write_command( [ 'set(''' prop_name ''', ' format_numeric_for_lm(prop_val) ');' ] ); 
+                obj = obj.write_command( [ 'set(''' prop_name ''', ' obj.format_numeric_for_lm(prop_val) ');' ] ); 
             end
 
         end
@@ -791,9 +791,7 @@ classdef (Abstract) c_lumericalBase
                     obj = obj.write_command( sprintf('setmaterial("%s","%s","%s");', matname, prop_name, prop_val ) ); 
                 else
                     % property value is numeric
-%                     s = [ 'setmaterial("' matname '","' prop_name '", ' format_numeric_for_lm(prop_val) ');' ];
-%                     obj = obj.write_command( [ 'setmaterial("' matname '","' prop_name '", ' format_numeric_for_lm(prop_val) ');' ] ); 
-                    obj = obj.write_command( sprintf('setmaterial("%s","%s",%s);', matname, prop_name, format_numeric_for_lm(prop_val) ) ); 
+                    obj = obj.write_command( sprintf('setmaterial("%s","%s",%s);', matname, prop_name, obj.format_numeric_for_lm(prop_val) ) ); 
                     
                 end
             end
@@ -963,6 +961,13 @@ classdef (Abstract) c_lumericalBase
             
         end     % end save_var_to_mat()
         
+        % ---------------------------
+        % Auxiliary functions
+        % ---------------------------
+
+        function returnval = format_numeric_for_lm(obj, val)
+            returnval = regexprep( mat2str(val, 10), {'\s+'}, {','} );
+        end
        
     end     % end methods
     
@@ -1050,10 +1055,6 @@ end     % end for loop
 parsed_inputs = p;
 
 end     % end parse varrgin
-
-function returnval = format_numeric_for_lm(val)
-    returnval = regexprep( mat2str(val, 10), {'\s+'}, {','} );
-end
 
 
 
