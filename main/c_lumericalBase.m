@@ -247,7 +247,7 @@ classdef (Abstract) c_lumericalBase
             %   Execute the lumerical command: "set('x',1e-6);"
             %       obj = obj.setprop('x', 1e-6');
             
-            if ischar(prop_val)
+            if ischar(prop_val) || isstring(prop_val)
                 % property value is a string
                 obj = obj.write_command( sprintf('set(''%s'', ''%s'');', prop_name, prop_val ) ); 
             else
