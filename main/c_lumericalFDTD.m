@@ -114,7 +114,7 @@ classdef c_lumericalFDTD < c_lumericalBase
             %       type: string or value
             %       desc: value of the property to set
 
-            if ischar(prop_val)
+            if ischar(prop_val) || isstring(prop_val)
                 % property value is a string
                 obj = obj.write_command( sprintf('setlayer(''%s'',''%s'',''%s'');', layer_name, prop_name, prop_val ) ); 
             else
