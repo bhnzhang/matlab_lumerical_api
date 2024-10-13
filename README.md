@@ -1,2 +1,2 @@
 # matlab_lumerical_api
-Matlab -> lumerical interface
+An API for interacting with Lumerical completely from Matlab.
